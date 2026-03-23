@@ -18,7 +18,8 @@ class RaffleFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->words(5, true),
+            'ticket_price'         => $this->faker->randomFloat(2,1,1000),
         ];
     }
 }
