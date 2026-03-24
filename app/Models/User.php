@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\enums\Role;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -32,7 +33,7 @@ class User extends Authenticatable
     }
 
     public function isAdmin(): bool {
-        return $this->role === 'Admin';
+        return $this->role === Role::Admin;
     }
 
     public function reservations(): HasMany {
