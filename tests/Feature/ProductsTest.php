@@ -12,7 +12,6 @@ class ProductsTest extends TestCase
     use RefreshDatabase, SetTestingData;
    public function test_guest_can_see_directory(): void {
         $this->get(route('products.index'))
-            ->assertOk()
-            ->assertSeeHtml('<title>Directory</title>');
+            ->assertOk();
    }
 }

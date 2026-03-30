@@ -29,8 +29,9 @@ class RaffleTest extends TestCase
         $raffle = $this->createRaffle();
 
         $this->actingAs($admin)
-            ->post(route('raffle.entry',[$raffle]),[])
-            ->assertRedirectBackWithErrors(['error' => 'Admin can\'t enter to a raffle.']);
+            ->post(route('raffles.entry',[$raffle]),[])
+            ->assertRedirect(route('raffles.show', [$raffle]))
+            ->assertSessionHasErrors(['error' => 'Admin can\'t enter to a raffle.']);
 
         $this->assertDatabaseMissing('raffle_entries',['raffle_id' => $raffle->id, 'user_id' => $admin->id]);
     }
@@ -41,8 +42,8 @@ class RaffleTest extends TestCase
         $raffle = $this->createRaffle();
 
         $this->actingAs($user)
-            ->post(route('raffle.entry', [$raffle]), [])
-            ->assertRedirect(route('raffle.users', [$raffle]))
+            ->post(route('raffles.entry', [$raffle]), [])
+            ->assertRedirect(route('raffles.users', [$raffle]))
             ->assertSessionHas('success', 'Raffle entry registered successfully.');
 
         $this->assertDatabaseHas('raffle_entries', ['raffle_id' => $raffle->id, 'user_id' => $user->id]);
@@ -54,7 +55,7 @@ class RaffleTest extends TestCase
         RaffleEntry::factory()->create(['raffle_id' => $raffle->id, 'user_id' => $user->id, 'ticket_count' => 1]);
 
         $this->actingAs($user)
-            ->post(route('raffle.entry', [$raffle]), [])
+            ->post(route('raffles.entry', [$raffle]), [])
             ->assertSessionHas('success', 'Raffle entry registered successfully.');
 
         $this->assertDatabaseHas('raffle_entries', [
@@ -71,8 +72,9 @@ class RaffleTest extends TestCase
         
 
         $this->actingAs($user)
-            ->post(route('raffle.entry', [$raffle]), [])
-            ->assertRedirectBackWithErrors(['error' => 'User only can buy ' . $this->max_entries . ' or less tickets for a raffle.']);
+            ->post(route('raffles.entry', [$raffle]), [])
+            ->assertRedirect(route('raffles.show', $raffle))
+            ->assertSessionHasErrors(['error' => 'User only can buy ' . $this->max_entries . ' or less tickets for a raffle.']);
 
         $this->assertDatabaseHas('raffle_entries', [
             'raffle_id' => $raffle->id,

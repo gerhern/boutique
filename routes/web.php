@@ -18,15 +18,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //Raffles
+    Route::get('/raffle', [RaffleController::class, 'index'])
+        ->name('raffles.index');
+    Route::get('/raffles/{raffle}', [RaffleController::class, 'show'])
+        ->name('raffles.show');
     Route::post('/raffle/{raffle}/entry', [RaffleController::class, 'entry'])
-        ->name('raffle.entry');
+        ->name('raffles.entry');
     Route::get('/raffle/{raffle}/users', [RaffleController::class, 'users'])
-        ->name('raffle.users');
+        ->name('raffles.users');
 
     //Products
-    Route::get('/products', [ProductController::class, 'index'])
-        ->name('products.index');
+
+    //Contact
+    Route::get('contact', [ContactController::class, 'index'])
+        ->name('contact');
 });
 
+Route::get('/products', [ProductController::class, 'index'])
+    ->name('products.index');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

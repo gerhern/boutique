@@ -11,7 +11,7 @@ trait SetTestingData
 {
     public function createUser(Role $role = Role::User ): User {
         return User::factory()->create([
-            'role' => $role
+            'role' => $role->value
         ]);
     }
 

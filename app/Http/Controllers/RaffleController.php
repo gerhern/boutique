@@ -13,7 +13,7 @@ class RaffleController extends Controller
         $user = $request->user();
 
         if($user->isAdmin()){
-            return back()->withErrors(['error' => 'Admin can\'t enter to a raffle.']);
+            return redirect(route('raffles.show', $raffle))->withErrors(['error' => 'Admin can\'t enter to a raffle.']);
         }
 
         $lastEntry = $user->raffleEntries()
@@ -26,14 +26,14 @@ class RaffleController extends Controller
             ->first();
 
             if($entry->ticket_count >= 3){
-                return back()->withErrors(['error' => 'User only can buy 3 or less tickets for a raffle.']);
+                return redirect(route('raffles.show', $raffle))->withErrors(['error' => 'User only can buy 3 or less tickets for a raffle.']);
             }
 
             $entry->update([
                 'ticket_count' => $entry->ticket_count++
             ]);
 
-            return redirect(route('raffle.users', $raffle))->with('success', 'Raffle entry registered successfully.');
+            return redirect(route('raffles.show', $raffle))->with('success', 'Raffle entry registered successfully.');
         }
 
         $entry = RaffleEntry::create([
@@ -43,7 +43,7 @@ class RaffleController extends Controller
             'payment_status' => $request->paymentStatus,
         ]);
 
-        return redirect(route('raffle.users', $raffle))->with('success', 'Raffle entry registered successfully.');
+        return redirect(route('raffles.users', $raffle))->with('success', 'Raffle entry registered successfully.');
 
         // $raffle = Raffle::create([
         //     'product_id'    => $request->product_id,

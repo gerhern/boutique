@@ -33,7 +33,7 @@ class User extends Authenticatable
     }
 
     public function isAdmin(): bool {
-        return $this->role === Role::Admin;
+        return $this->role === Role::Admin->value;
     }
 
     public function reservations(): HasMany {
