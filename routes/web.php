@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RaffleController;
@@ -36,5 +37,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/products', [ProductController::class, 'index'])
     ->name('products.index');
+Route::get('/products/{product}', [ProductController::class, 'show'])
+    ->name('products.show');
 
 require __DIR__ . '/auth.php';

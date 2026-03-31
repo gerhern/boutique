@@ -1,5 +1,7 @@
 <?php
 
+use App\enums\ProductCondition;
+use App\enums\ProductStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->enum('condition', ['new', 'used']);
-            $table->enum('status', ['available', 'reserved', 'sold'])->default('available');
+            $table->enum('condition', [ProductCondition::New, ProductCondition::Used]);
+            $table->enum('status', [ProductStatus::Available, ProductStatus::Reserved, ProductStatus::Sold])->default('available');
             $table->decimal('price', 10,2);
             $table->foreignId('category_id')->constrained()->restrictOnDelete();
             $table->timestamps();

@@ -1,39 +1,62 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+@extends('layouts.auth')
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+@section('title', 'Restablecer contraseña')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+<div class="w-full max-w-[400px]">
+
+    <div class="bg-bg-surface border border-border-subtle rounded-2xl p-8 shadow-sm">
+        <div class="mb-6">
+            <h1 class="text-xl font-semibold text-content-primary">Nueva contraseña</h1>
+            <p class="text-sm text-content-disabled mt-2">
+                Ingresa tu correo y la nueva contraseña para recuperar el acceso.
+            </p>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        <form method="POST" action="{{ route('password.store') }}" class="space-y-5">
+            @csrf
+            {{-- @method('PUT')  --}}
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            {{-- Token de Restablecimiento (Obligatorio) --}}
+            <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
+            {{-- Email --}}
+            <x-ui.input
+                name="email"
+                type="email"
+                label="Confirmar correo"
+                placeholder="tu@correo.com"
+                :value="old('email', $request->email)"
+                :error="$errors->first('email')"
+                required
+            />
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+            {{-- Nueva Contraseña --}}
+            <x-ui.input
+                name="password"
+                type="password"
+                label="Nueva contraseña"
+                placeholder="••••••••"
+                :error="$errors->first('password')"
+                required
+                autofocus
+            />
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+            {{-- Confirmar Contraseña --}}
+            <x-ui.input
+                name="password_confirmation"
+                type="password"
+                label="Repetir contraseña"
+                placeholder="••••••••"
+                required
+            />
+
+            <div class="pt-2">
+                <x-ui.button type="submit" variant="primary" class="w-full justify-center py-2.5">
+                    Restablecer contraseña
+                </x-ui.button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
