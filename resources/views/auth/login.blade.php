@@ -1,47 +1,60 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.auth')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Iniciar Sesión')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+<div class="w-full max-w-[400px]">
+
+    <div class="bg-bg-surface border border-border-subtle rounded-2xl p-8 shadow-sm">
+        <div class="mb-6">
+            <h1 class="text-xl font-semibold">Bienvenido</h1>
+            <p class="text-sm text-content-disabled">Ingresa tus datos para continuar.</p>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            @csrf
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <x-ui.input
+                name="email"
+                type="email"
+                label="Email"
+                placeholder="tu@correo.com"
+                :value="old('email')"
+                :error="$errors->first('email')"
+                required
+            />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <div class="space-y-1">
+                <x-ui.input
+                    name="password"
+                    type="password"
+                    label="Contraseña"
+                    placeholder="••••••••"
+                    :error="$errors->first('password')"
+                    required
+                />
+                <div class="flex justify-end">
+                    <a href="{{ route('password.request') }}" class="text-[11px] text-content-disabled hover:text-accent transition-colors">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+            </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+            <x-ui.button type="submit" variant="primary" class="w-full justify-center py-2.5">
+                Iniciar Sesión
+            </x-ui.button>
+        </form>
+    </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    {{-- Footer minimalista solo para la página de login --}}
+    <div class="mt-6 flex justify-between items-center px-2">
+        <a href="{{ route('products.index') }}" class="text-xs text-content-disabled hover:text-content-secondary flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+            Volver al inicio
+        </a>
+        <a href="{{ route('register') }}" class="text-xs text-accent font-medium hover:underline">
+            Crear cuenta
+        </a>
+    </div>
+</div>
+@endsection
