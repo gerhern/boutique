@@ -11,9 +11,18 @@ use Tests\TestCase;
 class ProductsTest extends TestCase
 {
     use RefreshDatabase, SetTestingData;
-   public function test_users_can_see_directory(): void {
-        $products = Product::factory(25)->create();
-        $this->get(route('products.index'))
+   public function test_guest_cannot_see_directory(): void {
+        $this->actingAsGuest()
+        ->get(route('products.index'))
+        ->assertRedirect('login');
+    }
+
+    public function test_user_can_see_directory(): void {
+        $user = $this->createUser();
+
+        $this->actingAs($user)
+            ->get(route('products.index'))
             ->assertOk();
-   }
+    }
+
 }

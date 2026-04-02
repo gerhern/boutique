@@ -15,7 +15,7 @@
 
         {{-- Links de navegación principales --}}
         <div class="hidden md:flex items-center gap-1">
-            <x-layout.nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+            <x-layout.nav-link :href="route('dashboard')" :active="request()->routeIs('admin.dashboard')">
                 Dashboard
             </x-layout.nav-link>
             <x-layout.nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">

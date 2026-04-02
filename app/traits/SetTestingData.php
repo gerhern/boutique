@@ -15,6 +15,14 @@ trait SetTestingData
         ]);
     }
 
+    public function createProduct(){
+        return Product::factory()->create();
+    }
+
+    public function createProducts(int $qty = 2){
+        return Product::factory($qty)->create();
+    }
+
     public function createRaffle(Product $product = null): Raffle {
         return Raffle::factory()->create([
             'product_id' => $product->id ?? Product::factory()->create()

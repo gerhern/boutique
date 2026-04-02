@@ -9,7 +9,7 @@
     $src = str_starts_with($imagePath, 'http') ? $imagePath : asset('storage/' . $imagePath);
 @endphp
 
-    <div class="relative aspect-[3/4] overflow-hidden bg-bg-overlay">
+    <div class="relative aspect-3/4 overflow-hidden bg-bg-overlay">
         <img src="{{ $src }}"
              alt="{{ $product->name }}"
              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
