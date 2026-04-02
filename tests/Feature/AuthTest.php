@@ -47,28 +47,41 @@ class AuthTest extends TestCase
 
 
     #[DataProvider('adminRoutesProvider')]
-    public function test_guest_cannot_enter_admin_routes($routeName): void
+    public function test_guest_cannot_enter_admin_routes($routeName, $verb): void
     {
-        $this->actingAsGuest()
-            ->get(route($routeName))
-            ->assertRedirect(route('login'));
+        $this->actingAsGuest();
+
+        if($verb === 'get'){
+            $response = $this->get(route($routeName));
+        }else if($verb === 'post'){
+            $response = $this->post(route($routeName));
+        }
+
+        $response->assertRedirect(route('login'));
     }
 
     #[DataProvider('adminRoutesProvider')]
-    public function test_user_cannot_enter_admin_routes($routeName):void {
+    public function test_user_cannot_enter_admin_routes($routeName, $verb):void {
         $user = $this->createUser();
-        $this->actingAs($user)
-            ->get(route($routeName))
-            ->assertRedirect(route('products.index'))
+        $this->actingAs($user);
+
+        if($verb === 'get'){
+            $response = $this->get(route($routeName));
+        }else if($verb === 'post'){
+            $response = $this->post(route($routeName));
+        }
+            $response->assertRedirect(route('products.index'))
             ->assertSessionHas(['error' => '403, Esta sección está reservada para el equipo administrativo de ' . config('app.name')]);
     }
 
     public static function adminRoutesProvider(): array
     {
         return [
-            'dashboard' => ['dashboard'], // Asegúrate que este nombre de ruta exista
-            'products_index' => ['admin.products.index'],
-            'raffles_index'   => ['admin.raffles.index'],
+            'dashboard' => ['dashboard', 'get'], // Asegúrate que este nombre de ruta exista
+            'products_index' => ['admin.products.index', 'get'],
+            'products_create' => ['admin.products.create', 'get'],
+            'raffles_index'   => ['admin.raffles.index', 'get'],
+            'products_create' => ['admin.products.store', 'post']
         ];
     }
 }

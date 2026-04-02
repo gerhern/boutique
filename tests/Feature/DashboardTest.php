@@ -32,12 +32,13 @@ class DashboardTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('admin.products.create'))
-            ->assertSee('input[name="name"][required]')
-            ->assertSee('input[name="description"]')
-            ->assertSee('select[name="status"]')
-            ->assertSee('input[name="price"][type="number"]')
-            ->assertSee('select[name="category_id"]')
-            ->assertSee('form[enctype="multipart/form-data"]')
+            ->assertSee('name="name"', false)
+            ->assertSee('name="description"', false)
+            ->assertSee('name="status"', false)
+            ->assertSee('name="price"', false)
+            ->assertSee('type="number"', false)
+            ->assertSee('name="category_id"', false)
+            ->assertSee('enctype="multipart/form-data"', false)
             ->assertViewHas('categories', function ($categories) {
                 return $categories->count() === 5;
             });

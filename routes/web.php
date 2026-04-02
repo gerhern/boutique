@@ -9,7 +9,7 @@ use App\Http\Controllers\RaffleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect(route('login'));
 });
 
 Route::middleware('auth')->group(function () {
@@ -18,10 +18,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         //Admin.Raffles
         Route::get('/dashboard/raffles', [AdminController::class, 'raffles'])
-        ->name('admin.raffles.index');
+            ->name('admin.raffles.index');
         //Admin.Products
         Route::get('/dashboard/products', [AdminController::class, 'products'])
             ->name('admin.products.index');
+        Route::get('/dashboard/products/create', [ProductController::class, 'create'])
+            ->name('admin.products.create');
+        Route::post('/dashboard/products/store', [ProductController::class, 'store'])
+            ->name('admin.products.store');
     });
     //Admin
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,11 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/settings', [AdminController::class, 'settings'])
         ->name('admin.settings');
 
-    Route::get('/dashboard/products/create', [AdminController::class, 'create'])
-        ->name('admin.products.create');
     Route::get('/dashboard/products/edit', [AdminController::class, 'edit'])
         ->name('admin.products.edit');
-        Route::get('/dashboard/products/show', [AdminController::class, 'show'])
+    Route::get('/dashboard/products/show', [AdminController::class, 'show'])
         ->name('admin.products.show');
 
 
