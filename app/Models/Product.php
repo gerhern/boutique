@@ -3,9 +3,17 @@
 namespace App\Models;
 
 use App\enums\ProductStatus;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[Fillable([
+    'name',
+    'description',
+    'condition',
+    'status',
+    'price',
+    'category_id'])]
 class Product extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
@@ -25,6 +33,10 @@ class Product extends Model
 
     public function category(){
         return $this->belongsTo(Category::class);
+    }
+
+    public function images(){
+        return $this->hasMany(ProductImage::class);
     }
 
     public function primaryImage(){

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Nuevo producto')
+@section('title', 'New Product')
 
 @section('content')
 
@@ -8,17 +8,17 @@
     <nav class="text-xs text-content-disabled mb-2">
         <a href="{{ route('dashboard') }}" class="hover:text-content-secondary transition-colors">Admin</a>
         <span class="mx-1.5">/</span>
-        <a href="{{ route('admin.products.index') }}" class="hover:text-content-secondary transition-colors">Productos</a>
+        <a href="{{ route('admin.products.index') }}" class="hover:text-content-secondary transition-colors">Products</a>
         <span class="mx-1.5">/</span>
-        <span class="text-content-secondary">Nuevo producto</span>
+        <span class="text-content-secondary">New product</span>
     </nav>
 
     {{-- Header --}}
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-lg font-medium text-content-primary">Nuevo producto</h1>
+        <h1 class="text-lg font-medium text-content-primary">New product</h1>
         <span class="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full bg-accent-muted text-accent border border-accent-border">
             <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
-            Sin guardar
+            Without Save
         </span>
     </div>
 
@@ -38,16 +38,16 @@
                 {{-- Información general --}}
                 <div class="bg-bg-surface border border-border-subtle rounded-lg p-5">
                     <h2 class="text-sm font-medium text-content-primary pb-3 mb-4 border-b border-border-subtle">
-                        Información general
+                        Main Data
                     </h2>
 
                     {{-- Nombre --}}
                     <div class="mb-4">
                         <x-ui.input
                             name="name"
-                            label="Nombre"
-                            placeholder="Ej. Vestido floral talla M"
-                            hint="Sé específico: incluye tipo de prenda y talla."
+                            label="name"
+                            placeholder="Ex.Floral Dress size M"
+                            hint="Be specific: include cloth kind and size."
                             :value="old('name')"
                             :error="$errors->first('name')"
                             required

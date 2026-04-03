@@ -3,9 +3,12 @@
 namespace App\traits;
 
 use App\enums\Role;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Raffle;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 trait SetTestingData
 {
@@ -27,5 +30,15 @@ trait SetTestingData
         return Raffle::factory()->create([
             'product_id' => $product->id ?? Product::factory()->create()
         ]);
+    }
+
+    public function createCategory(): Category {
+        return Category::factory()->create();
+    }
+
+    public function createImage(string $imgName = 'testing_photo.jpg'){
+        Storage::fake('public');
+        return UploadedFile::fake()->image($imgName, 600, 800);
+
     }
 }

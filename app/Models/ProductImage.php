@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['product_id', 'path'])]
+#[Fillable([
+    'path',
+    'is_primary',
+    'sort_order',
+    'product_id'
+    ])]
 class ProductImage extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductImageFactory> */

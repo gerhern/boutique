@@ -19,13 +19,20 @@ Route::middleware('auth')->group(function () {
         //Admin.Raffles
         Route::get('/dashboard/raffles', [AdminController::class, 'raffles'])
             ->name('admin.raffles.index');
+
+
         //Admin.Products
         Route::get('/dashboard/products', [AdminController::class, 'products'])
             ->name('admin.products.index');
+
         Route::get('/dashboard/products/create', [ProductController::class, 'create'])
             ->name('admin.products.create');
+
         Route::post('/dashboard/products/store', [ProductController::class, 'store'])
             ->name('admin.products.store');
+
+        Route::get('/dashboard/products/{product}', [ProductController::class, 'adminShow'])
+            ->name('admin.products.show');
     });
     //Admin
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -40,8 +47,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/products/edit', [AdminController::class, 'edit'])
         ->name('admin.products.edit');
-    Route::get('/dashboard/products/show', [AdminController::class, 'show'])
-        ->name('admin.products.show');
 
 
     Route::get('/dashboard/raffles/history', [AdminController::class, 'history'])
