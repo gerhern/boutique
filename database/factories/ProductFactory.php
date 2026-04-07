@@ -33,18 +33,35 @@ class ProductFactory extends Factory
     }
 
     public function configure()
-    {
-        return $this->afterCreating(function (Product $product) {
-            // Generamos un ID aleatorio entre 1 y 1000 para Picsum
-            $imageId = rand(1, 1000);
+{
+    return $this->afterCreating(function (Product $product) {
+        $count = rand(1, 3);
 
-            ProductImage::create([
+        for ($i = 0; $i < $count; $i++) {
+            $imageId = rand(1, 1000);
+            ProductImage::factory()->create([
                 'product_id' => $product->id,
-                // Usamos una proporción 3:4 que es común en catálogos textiles
+                'is_primary' => $i === 0,
+                'sort_order' => $i,
                 'path'       => "https://picsum.photos/id/{$imageId}/600/800",
-                'is_primary' => true,
-                'sort_order' => 0,
             ]);
-        });
-    }
+        }
+    });
+}
+
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (Product $product) {
+    //         // Generamos un ID aleatorio entre 1 y 1000 para Picsum
+    //         $imageId = rand(1, 1000);
+
+    //         ProductImage::create([
+    //             'product_id' => $product->id,
+    //             // Usamos una proporción 3:4 que es común en catálogos textiles
+    //             'path'       => "https://picsum.photos/id/{$imageId}/600/800",
+    //             'is_primary' => true,
+    //             'sort_order' => 0,
+    //         ]);
+    //     });
+    // }
 }

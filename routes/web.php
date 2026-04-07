@@ -16,24 +16,32 @@ Route::middleware('auth')->group(function () {
     Route::middleware('checkAdminRole')->group(function () {
         //Admin
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
         //Admin.Raffles
-        Route::get('/dashboard/raffles', [AdminController::class, 'raffles'])
+        Route::get('/admin/raffles', [AdminController::class, 'raffles'])
             ->name('admin.raffles.index');
 
 
         //Admin.Products
-        Route::get('/dashboard/products', [AdminController::class, 'products'])
+        Route::get('/admin/products', [ProductController::class, 'adminIndex'])
             ->name('admin.products.index');
 
-        Route::get('/dashboard/products/create', [ProductController::class, 'create'])
+        Route::get('/admin/products/create', [ProductController::class, 'create'])
             ->name('admin.products.create');
 
-        Route::post('/dashboard/products/store', [ProductController::class, 'store'])
+        Route::post('/admin/products/store', [ProductController::class, 'store'])
             ->name('admin.products.store');
 
-        Route::get('/dashboard/products/{product}', [ProductController::class, 'adminShow'])
+        Route::get('/admin/products/{product}', [ProductController::class, 'adminShow'])
             ->name('admin.products.show');
+
+        Route::get('/admin/products/edit/{product}', [ProductController::class, 'edit'])
+                ->name('admin.products.edit');
+
+        Route::put('/admin/products/update/{product}', [ProductController::class, 'update'])
+                ->name('admin.products.update');
     });
+
     //Admin
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -44,9 +52,6 @@ Route::middleware('auth')->group(function () {
         ->name('admin.messages.index');
     Route::get('/dashboard/settings', [AdminController::class, 'settings'])
         ->name('admin.settings');
-
-    Route::get('/dashboard/products/edit', [AdminController::class, 'edit'])
-        ->name('admin.products.edit');
 
 
     Route::get('/dashboard/raffles/history', [AdminController::class, 'history'])

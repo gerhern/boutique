@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'New Product')
+@section('title', 'Edit Product: ' . $product->name)
 
 @section('content')
 
@@ -10,51 +10,76 @@
         <span class="mx-1.5">/</span>
         <a href="{{ route('admin.products.index') }}" class="hover:text-content-secondary transition-colors">Products</a>
         <span class="mx-1.5">/</span>
-        <span class="text-content-secondary">New product</span>
+        <span class="text-content-secondary">Edit Product</span>
     </nav>
 
     {{-- Header --}}
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-lg font-medium text-content-primary">New product</h1>
-        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full bg-accent-muted text-accent border border-accent-border">
-            <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
-            Without Save
-        </span>
+        <h1 class="text-lg font-medium text-content-primary">Edit: {{ $product->name }}</h1>
+        <a href="{{ route('admin.products.show', $product) }}" class="text-[11px] font-medium text-accent hover:underline">
+            View Details
+        </a>
+    </div>
+
+    <div class="mb-6 flex flex-col gap-3">
+        @dump(session('errors'))
+
+        {{-- Notificación de Éxito al crear o actualizar --}}
+        @if (session('status') || session('success'))
+            <x-ui.alert
+                type="success"
+                title="Action Successful"
+                :message="session('status') ?? session('success')"
+            />
+        @endif
+
+        {{-- Notificación de Errores de Validación --}}
+        @if ($errors->any())
+            <x-ui.alert
+                type="danger"
+                title="Validation Error"
+            >
+                {{-- Usamos el slot para listar los errores de forma elegante --}}
+                <ul class="mt-1.5 ml-4 list-disc list-outside text-[11px] opacity-85 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </x-ui.alert>
+        @endif
+
     </div>
 
     <form
-        action="{{ route('admin.products.store') }}"
+        action="{{ route('admin.products.update', $product) }}"
         method="POST"
         enctype="multipart/form-data"
         id="product-form"
     >
         @csrf
+        @method('PUT')
 
         <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-5 items-start">
 
-            {{-- Columna principal --}}
+            {{-- main column --}}
             <div class="flex flex-col gap-5">
 
-                {{-- Información general --}}
+                {{-- info --}}
                 <div class="bg-bg-surface border border-border-subtle rounded-lg p-5">
                     <h2 class="text-sm font-medium text-content-primary pb-3 mb-4 border-b border-border-subtle">
                         Main Data
                     </h2>
 
-                    {{-- Nombre --}}
                     <div class="mb-4">
                         <x-ui.input
                             name="name"
-                            label="name"
-                            placeholder="Ex.Floral Dress size M"
-                            hint="Be specific: include cloth kind and size."
-                            :value="old('name')"
+                            label="Product Name"
+                            :value="old('name', $product->name)"
                             :error="$errors->first('name')"
                             required
                         />
                     </div>
 
-                    {{-- Descripción --}}
                     <div class="mb-4">
                         <label for="description" class="block text-xs font-medium text-content-secondary mb-1.5">
                             Description
@@ -66,16 +91,13 @@
                             rows="4"
                             placeholder="Materials, state of cloth, important details..."
                             class="w-full px-3 py-2 text-sm bg-bg-elevated border border-border-subtle rounded-md text-content-primary placeholder:text-content-disabled outline-none resize-y transition-all duration-150 hover:border-border-mid focus:border-accent-border focus:ring-2 focus:ring-accent-muted {{ $errors->has('description') ? 'border-[rgba(239,68,68,0.5)]' : '' }}"
-                        >{{ old('description') }}</textarea>
+                        >{{ old('description', $product->description) }}</textarea>
                         @error('description')
                             <span class="text-xs text-state-danger mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    {{-- Precio y Estado --}}
                     <div class="grid grid-cols-2 gap-3 mb-4">
-
-                        {{-- Precio --}}
                         <div>
                             <label for="price" class="block text-xs font-medium text-content-secondary mb-1.5">
                                 Price <span class="text-accent">*</span>
@@ -89,9 +111,9 @@
                                     step="0.01"
                                     min="0"
                                     placeholder="0.00"
-                                    value="{{ old('price') }}"
+                                    value="{{ old('price', $product->price) }}"
                                     class="w-full pl-6 pr-3 py-2 text-sm bg-bg-elevated border border-border-subtle rounded-md text-content-primary placeholder:text-content-disabled outline-none transition-all duration-150 hover:border-border-mid focus:border-accent-border focus:ring-2 focus:ring-accent-muted {{ $errors->has('price') ? 'border-[rgba(239,68,68,0.5)]' : '' }}"
-                                    required
+                                    {{-- required --}}
                                 />
                             </div>
                             @error('price')
@@ -99,13 +121,10 @@
                             @enderror
                         </div>
 
-                        {{-- Estado --}}
                         <x-ui.select
                             name="status"
-                            label="Estado"
-                            :selected="old('status')"
-                            :error="$errors->first('status')"
-                            placeholder="Select"
+                            label="Status"
+                            :selected="old('status', $product->status)"
                             :options="[
                                 'available' => 'Available',
                                 'reserved'  => 'Reserved',
@@ -113,118 +132,89 @@
                                 'sold'      => 'Sold',
                             ]"
                         />
-
                     </div>
 
-                    {{-- Categoría --}}
                     <x-ui.select
                         name="category_id"
-                        label="Categoría"
-                        placeholder="Choose a Category"
-                        :selected="old('category_id')"
-                        :error="$errors->first('category_id')"
+                        label="Category"
+                        :selected="old('category_id', $product->category_id)"
                         :options="$categories->pluck('name', 'id')"
                     />
-
                 </div>
 
-                {{-- Imágenes --}}
+                {{-- current Images--}}
                 <div class="bg-bg-surface border border-border-subtle rounded-lg p-5">
                     <h2 class="text-sm font-medium text-content-primary pb-3 mb-4 border-b border-border-subtle">
-                        Product Images
+                        Current Images
                     </h2>
 
-                    {{-- Zona de drop --}}
-                    @php
-                        $hasImageError = $errors->has('images') || $errors->has('images.*');
-                    @endphp
-                    <div
-                        id="drop-zone"
-                        {{-- class="border border-dashed border-border-mid rounded-lg p-6 text-center cursor-pointer transition-all duration-150 hover:border-accent-border hover:bg-accent-muted" --}}
-                        class="border border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-150
-                        {{ $hasImageError
-                            ? 'border-state-danger bg-[rgba(239,68,68,0.05)] hover:bg-[rgba(239,68,68,0.08)]'
-                            : 'border-border-mid hover:border-accent-border hover:bg-accent-muted' }}"
-                        onclick="document.getElementById('images-input').click()"
-                    >
-                        <svg class="w-9 h-9 mx-auto mb-3 {{ $hasImageError ? 'text-state-danger' : 'text-content-disabled' }}"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                            <polyline points="21 15 16 10 5 21"/>
-                        </svg>
-                        @if ($hasImageError)
-                            <p class="text-sm font-medium text-state-danger mb-1">
-                                {{ $errors->first('images') ?? $errors->first('images.*') }}
-                            </p>
-                            <p class="text-xs text-content-disabled">
-                                Select between 1 and 3 images · JPG, PNG or JPEG · Max. 2MB
-                            </p>
-                        @else
-                            <p class="text-sm text-content-secondary mb-1">
-                                Drop images or <span class="text-accent">select files</span>
-                            </p>
-                            <p class="text-xs text-content-disabled">
-                                JPG, PNG or JPEG · Max. 2MB by image · Up to 3 images
-                            </p>
-                        @endif
+                    <div class="grid grid-cols-3 gap-3 mb-6">
+                        @foreach($product->images as $image)
+                            <div class="relative aspect-square rounded-lg overflow-hidden border border-border-subtle group">
+                                {{-- <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover"> --}}
+                                <img src="{{ $image->path }}" class="w-full h-full object-cover">
+
+                                <div class="absolute top-2 right-2">
+                                    <input
+                                        type="checkbox"
+                                        name="delete_images[]"
+                                        value="{{ $image->id }}"
+                                        class="w-4 h-4 rounded border-gray-300 text-accent focus:ring-accent"
+                                        title="Mark to delete"
+                                    >
+                                </div>
+
+                                @if($image->is_primary)
+                                    <span class="absolute bottom-2 left-2 bg-accent text-white text-[9px] px-1.5 py-0.5 rounded uppercase font-bold">Primary</span>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
 
-                    <input
-                        id="images-input"
-                        name="images[]"
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        multiple
-                        class="hidden"
-                    />
+                    {{-- upload new images --}}
+                    <p class="text-xs font-medium text-content-secondary mb-3">Add more images (Max. total: 3)</p>
+                    <div
+                        id="drop-zone"
+                        class="border border-dashed border-border-mid rounded-lg p-6 text-center cursor-pointer hover:bg-accent-muted transition-colors"
+                        onclick="document.getElementById('images-input').click()"
+                    >
+                        <p class="text-xs text-content-disabled">Click to upload new photos</p>
+                    </div>
+                    <input id="images-input" name="images[]" type="file" multiple class="hidden" accept="image/*" />
 
-                    @error('images')
-                        <span class="text-xs text-state-danger mt-2 block">{{ $message }}</span>
-                    @enderror
-                    @error('images.*')
-                        <span class="text-xs text-state-danger mt-2 block">{{ $message }}</span>
-                    @enderror
-
-                    {{-- Preview de imágenes --}}
                     <div id="preview-grid" class="grid grid-cols-3 gap-2 mt-3"></div>
-                    <p id="preview-counter" class="text-[11px] text-content-disabled text-right mt-2 hidden">
-                        <span id="preview-count">0</span> / 3 images
-                    </p>
-
                 </div>
 
             </div>
 
-            {{-- Columna lateral --}}
-            <div class="bg-bg-surface border border-border-subtle rounded-lg p-5">
+            {{-- Actions --}}
+            <div class="bg-bg-surface border border-border-subtle rounded-lg p-5 sticky top-5">
                 <h2 class="text-sm font-medium text-content-primary pb-3 mb-4 border-b border-border-subtle">
-                    Publish
+                    Publish Changes
                 </h2>
 
                 <div class="flex flex-col gap-2">
                     <x-ui.button variant="primary" type="submit" class="w-full justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                        Save Product
+                        Update Product
                     </x-ui.button>
-                    <x-ui.button variant="ghost" :href="route('dashboard')" class="w-full justify-center">
-                        Cancel
+                    <x-ui.button variant="ghost" :href="route('admin.products.show', $product)" class="w-full justify-center text-content-disabled">
+                        Discard Changes
                     </x-ui.button>
                 </div>
 
-                <p class="text-[11px] text-content-disabled leading-relaxed mt-4 pt-4 border-t border-border-subtle">
-                    This product will be visible on public directory after it was saved .
-                </p>
+                <div class="mt-6 pt-4 border-t border-border-subtle">
+                    <p class="text-[10px] text-content-disabled uppercase font-bold mb-2">History</p>
+                    <p class="text-[10px] text-content-secondary">Created: {{ $product->created_at->format('d/m/Y H:i') }}</p>
+                    <p class="text-[10px] text-content-secondary">Last Update: {{ $product->updated_at->diffForHumans() }}</p>
+                </div>
             </div>
 
         </div>
-
     </form>
 
 @endsection
 
+{{-- Reutilizamos el script de preview de la vista Create --}}
 @push('scripts')
 <script>
     const input       = document.getElementById('images-input');

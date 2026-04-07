@@ -31,18 +31,34 @@ class DatabaseSeeder extends Seeder
         // 2. Categorías y Productos con Imágenes
         $categories = Category::factory(4)->create();
 
-        $categories->each(function ($category) {
-            Product::factory(5)->create(['category_id' => $category->id])
-                ->each(function ($product) {
-                    // Creamos la imagen primaria obligatoria para el catálogo
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'path' => 'products/placeholder.jpg', // Asegúrate de tener este archivo
-                        'is_primary' => true,
-                        'sort_order' => 0
-                    ]);
-                });
-        });
+        Product::factory(10)->create();
+
+        // Product::factory()
+        //     ->has(
+        //         ProductImage::factory()
+        //         ->count(fake()->numberBetween(1,3))
+        //         ->sequence(
+        //             function($sequence){
+        //                 $imageId = rand(1, 1000);
+        //                 return ['is_primary' => $sequence->index === 0, 'sort_order' => $sequence->index, 'path' => "https://picsum.photos/id/{$imageId}/600/800"];
+        //             }
+        //         ),
+        //         'images'
+        //     )
+        //     ->create(10);
+
+        // $categories->each(function ($category) {
+        //     Product::factory(5)->create(['category_id' => $category->id])
+        //         ->each(function ($product) {
+        //             // Creamos la imagen primaria obligatoria para el catálogo
+        //             ProductImage::create([
+        //                 'product_id' => $product->id,
+        //                 'path' => 'defaults/no-image.jpeg', // Asegúrate de tener este archivo
+        //                 'is_primary' => true,
+        //                 'sort_order' => 0
+        //             ]);
+        //         });
+        // });
 
         // 3. Crear una Rifa Activa para pruebas visuales [cite: 1, 43]
         $raffleProduct = Product::factory()->create(['status' => 'available']);
