@@ -20,8 +20,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         //Admin.Raffles
-        Route::get('/admin/raffles', [AdminController::class, 'raffles'])
+        Route::get('/admin/raffles', [RaffleController::class, 'adminIndex'])
             ->name('admin.raffles.index');
+
+        Route::get('/admin/raffles/create/{product}', [RaffleController::class, 'create'])
+            ->name('admin.raffles.create');
+
+        Route::post('/admin/raffles/store', [RaffleController::class, 'store'])
+            ->name('admin.raffles.store');
 
 
         //Admin.Products
@@ -71,6 +77,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/raffles/history', [AdminController::class, 'history'])
         ->name('admin.raffles.history');
+    Route::get('/admin/raffles/show/{raffle}', [RaffleController::class, 'show'])
+            ->name('admin.raffles.show');
 
     //Raffles
     Route::get('/raffle', [RaffleController::class, 'index'])
@@ -81,6 +89,9 @@ Route::middleware('auth')->group(function () {
         ->name('raffles.entry');
     Route::get('/raffle/{raffle}/users', [RaffleController::class, 'users'])
         ->name('raffles.users');
+
+    Route::post('/admin/raffles/store', [RaffleController::class, 'store'])
+        ->name('admin.raffles.store');
 
     //Products
     Route::get('/products', [ProductController::class, 'index'])

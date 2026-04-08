@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\enums\RaffleStatus;
+use App\Http\Requests\admin\RaffleStoreRequest;
+use App\Models\Product;
 use App\Models\Raffle;
 use App\Models\RaffleEntry;
 use Illuminate\Http\Request;
@@ -9,6 +12,33 @@ use Illuminate\Support\Facades\Redirect;
 
 class RaffleController extends Controller
 {
+
+    public function adminIndex(Request $request){
+        $raffles = Raffle::with('entries')
+            ->countEntries()
+            ->latest()
+            ->paginate(12);
+
+        return view('admin.raffles.adminIndex', compact('raffles'));
+    }
+
+    public function create(Request $request, Product $product){
+        return view('admin.raffles.create', compact('product'));
+    }
+
+    public function store(RaffleStoreRequest $request){
+        $raffle = Raffle::create([
+            'product_id'        => $request->product_id,
+            'ticket_price'      => $request->ticket_price,
+            'max_participants'  => $request->max_participants,
+            'status'            => RaffleStatus::Active,
+            'closes_at'         => $request->closes_at
+        ]);
+
+        return redirect()->route('admin.raffles.show', $raffle)->with('success', 'Raffle opened successfully');
+    }
+
+
     public function entry(Request $request, Raffle $raffle) {
         $user = $request->user();
 

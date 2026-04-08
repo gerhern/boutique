@@ -1,5 +1,6 @@
 <?php
 
+use App\enums\RaffleStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,11 +15,9 @@ return new class extends Migration
         Schema::create('raffles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->restrictOnDelete();
-            $table->string('title');
-            $table->text('description')->nullable();
             $table->decimal('ticket_price', 10, 2);
-            $table->unsignedSmallInteger('max_participants')->nullable();
-            $table->enum('status', ['draft', 'active', 'closed', 'finished'])->default('draft');
+            $table->unsignedSmallInteger('max_participants')->default(10);
+            $table->enum('status', [RaffleStatus::Active, RaffleStatus::Closed, RaffleStatus::Finished])->default(RaffleStatus::Active);
             $table->timestamp('closes_at')->nullable();
             $table->foreignId('winner_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

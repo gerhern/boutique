@@ -120,11 +120,11 @@
                 </h2>
 
                 <div class="flex flex-col gap-2">
-                    <x-ui.button variant="primary" class="w-full justify-center">
+                    <x-ui.button variant="primary" class="w-full justify-center" href="{{ route('admin.raffles.create', $product) }}">
                         <svg class="w-3.5 h-3.5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                         </svg>
-                        Mark as Reserved
+                        Add to Raffle
                     </x-ui.button>
 
                     {{-- <x-ui.button variant="ghost" class="w-full justify-center text-state-danger hover:bg-state-danger/10">

@@ -2,7 +2,9 @@
 
 namespace App\enums;
 
-enum RaffleStatus
+enum RaffleStatus: string
 {
-    
+    case Active = 'active';
+    case Closed = 'closed';
+    case Finished = 'finished';
 }
