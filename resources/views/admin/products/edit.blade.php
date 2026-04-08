@@ -152,7 +152,9 @@
                         @foreach($product->images as $image)
                             <div class="relative aspect-square rounded-lg overflow-hidden border border-border-subtle group">
                                 {{-- <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover"> --}}
-                                <img src="{{ $image->path }}" class="w-full h-full object-cover">
+                                <img src="{{ asset('storage/' . ($image->path)) }}"
+                                            onerror="this.onerror=null; this.src='{{ asset('storage/defaults/no-image.jpeg') }}';"
+                                            class="w-full h-full object-cover">
 
                                 <div class="absolute top-2 right-2">
                                     <input

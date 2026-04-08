@@ -59,13 +59,10 @@
                     {{-- main image --}}
                     @php $primary = $product->primaryImage()->first(); @endphp
                     <div class="aspect-3/4 rounded-lg overflow-hidden border border-border-subtle bg-bg-elevated relative group">
-                        <img
-                            {{-- src="{{ asset('storage/' . ($primary->path ?? 'defaults/no-image.jpeg')) }}" --}}
-                            src = "{{$primary->path}}"
-                            class="w-full h-full object-cover"
-                            id="main-preview"
-                        />
-                        {{-- <span class="absolute top-3 left-3 bg-black/50 text-white text-[10px] px-2 py-1 rounded-md backdrop-blur-sm">Primary</span> --}}
+                        <img src="{{ asset('storage/' . ($primary->path)) }}"
+                                            onerror="this.onerror=null; this.src='{{ asset('storage/defaults/no-image.jpeg') }}';"
+                                            class="w-full h-full object-cover"
+                                            id="main-preview"/>
                     </div>
 
                     {{-- small image --}}
@@ -74,10 +71,10 @@
                             @foreach($product->images as $image)
                                 <button
                                     onclick="document.getElementById('main-preview').src = this.querySelector('img').src"
-                                    class="aspect-square rounded-md overflow-hidden border border-border-subtle hover:border-accent transition-colors bg-bg-elevated"
-                                >
-                                    {{-- <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover" /> --}}
-                                    <img src="{{$image->path }}" class="w-full h-full object-cover" />
+                                    class="aspect-square rounded-md overflow-hidden border border-border-subtle hover:border-accent transition-colors bg-bg-elevated">
+                                    <img src="{{ asset('storage/' . ($image->path)) }}"
+                                            onerror="this.onerror=null; this.src='{{ asset('storage/defaults/no-image.jpeg') }}';"
+                                            class="w-full h-full object-cover">
                                 </button>
                             @endforeach
                         </div>

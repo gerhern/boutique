@@ -20,11 +20,11 @@
         <main class="flex-1 overflow-x-hidden">
 
             {{-- Alertas de sesión --}}
-            @if (session('success'))
+            {{-- @if (session('success'))
                 <div class="px-6 pt-6">
                     <x-ui.alert type="success" :message="session('success')" />
                 </div>
-            @endif
+            @endif --}}
 
             @if (session('error'))
                 <div class="px-6 pt-6">

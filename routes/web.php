@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RaffleController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -40,6 +42,16 @@ Route::middleware('auth')->group(function () {
 
         Route::put('/admin/products/update/{product}', [ProductController::class, 'update'])
                 ->name('admin.products.update');
+
+        //Admin.Categories
+        Route::get('/admin/categories', [CategoryController::class, 'index'])
+            ->name('admin.categories.index');
+
+        Route::put('/admin/categories/{category}', [CategoryController::class, 'update'])
+            ->name('admin.categories.update');
+
+        Route::delete('/admin/categories/destroy/{category}', [CategoryController::class, 'destroy'])
+            ->name('admin.categories.destroy');
     });
 
     //Admin
@@ -56,10 +68,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/raffles/history', [AdminController::class, 'history'])
         ->name('admin.raffles.history');
-
-    //Admin.Categories
-    Route::get('/dashboard/categories', [AdminController::class, 'categories'])
-        ->name('admin.categories.index');
 
     //Raffles
     Route::get('/raffle', [RaffleController::class, 'index'])

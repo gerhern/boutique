@@ -7,6 +7,7 @@ use App\enums\ProductStatus;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use Faker\Provider\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -43,7 +44,7 @@ class ProductFactory extends Factory
                 'product_id' => $product->id,
                 'is_primary' => $i === 0,
                 'sort_order' => $i,
-                'path'       => "https://picsum.photos/id/{$imageId}/600/800",
+                'path'       => "products/{$this->faker->uuid()}.jpeg",
             ]);
         }
     });

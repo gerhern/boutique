@@ -32,7 +32,7 @@ class ProductUpdateRequest extends FormRequest
             'status'        => [Rule::enum(ProductStatus::class)],
             'price'         => 'required|numeric|min:1|max:9999.99',
             'category_id'   => 'required|exists:categories,id',
-            'images'        => 'required|array|min:1|max:3',
+            'images'        => 'nullable|array|min:1|max:3',
             'images.*'      => 'image|mimes:jpg,jpeg,png|max:2048',
 
             'delete_images'   => ['nullable', 'array'],
@@ -47,7 +47,7 @@ class ProductUpdateRequest extends FormRequest
 
             $currentCount = $product->images()->count();
             $deletingCount = count($this->input('delete_images', []));
-            $newCount = count($this->file('images', []));
+            $newCount = $this->hasFile('images') ? count($this->file('images', [])): 0 ;
 
             $finalCount = $currentCount - $deletingCount + $newCount;
 

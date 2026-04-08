@@ -292,4 +292,20 @@ class ProductsTest extends TestCase
             ->put(route('admin.products.update', $product), $payloadLimits)
             ->assertRedirectBackWithErrors(['images', 'images.0']);
     }
+
+    public function test_admin_index_products_can_be_rendered(): void {
+        $this->withoutExceptionHandling();
+        $admin = $this->createUser(Role::Admin);
+        $products = $this->createProducts(10);
+
+        $response = $this->actingAs($admin)
+            ->get(route('admin.products.index'));
+
+        $response->assertOk()
+            ->assertViewIs('admin.products.index')
+            ->assertSee($products[0]->name)
+            ->assertSee($products[1]->price)
+            ->assertSee($products[2]->primaryImage()->first()->path, false )
+            ->assertSee(route('admin.products.show', $products[3]));
+    }
 }

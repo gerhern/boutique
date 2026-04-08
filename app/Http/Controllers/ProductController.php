@@ -21,6 +21,12 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
+    public function adminIndex(Request $request){
+        $products = Product::latest()->paginate(12);
+
+        return view('admin.products.index', compact('products'));
+    }
+
     public function create(Request $request)
     {
         $categories = Category::all();

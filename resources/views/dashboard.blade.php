@@ -114,15 +114,14 @@
                 </div>
 
                 <div class="flex items-center gap-1.5">
-                    {{-- <a
+                    <a
                         href="{{ route('admin.products.edit', $product) }}"
                         class="text-[11px] px-2.5 py-1 rounded border border-border-subtle text-content-secondary hover:border-accent-border hover:text-accent transition-colors"
                     >
                         Editar
-                    </a> --}}
+                    </a>
                     <a
                         href="{{ route('admin.products.show', $product) }}"
-                        target="_blank"
                         class="text-[11px] px-2.5 py-1 rounded border border-border-subtle text-content-secondary hover:border-accent-border hover:text-accent transition-colors"
                     >
                         Ver
