@@ -75,35 +75,9 @@
                         </td>
 
                         {{-- Acciones --}}
-                        {{-- Acciones Corregidas --}}
-<td class="px-0 md:px-6 py-4 md:py-4 border-t md:border-t-0 mt-2 md:mt-0 pt-4 md:pt-4">
-    <div class="flex items-center justify-between md:justify-end gap-3 w-full">
-
-        {{-- Etiqueta solo para móvil para dar contexto --}}
-        <span class="md:hidden text-[10px] uppercase font-bold text-content-disabled">Management</span>
-
-        <div class="flex items-center gap-2">
-            <a
-               class="px-4 py-2 md:py-1.5 text-[10px] font-bold uppercase tracking-wider border border-border-subtle rounded bg-bg-surface hover:bg-bg-elevated transition-all text-content-primary shadow-sm">
-                Details
-            </a>
-
-            <form  method="POST" class="inline">
-                @csrf @method('DELETE')
-                <button type="submit"
-                        onclick="return confirm('Are you sure you want to delete this raffle?')"
-                        class="p-2 md:p-1.5 text-content-secondary hover:text-state-danger hover:bg-state-danger/10 rounded-md transition-colors border border-transparent md:border-none">
-                    <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                </button>
-            </form>
-        </div>
-    </div>
-</td>
                         <td class="px-0 md:px-6 py-4 md:py-4 text-right flex justify-start md:justify-end gap-2 border-t md:border-t-0 mt-2 md:mt-0 pt-4 md:pt-4">
                             <a
-                            {{-- href="{{ route('admin.raffles.show', $raffle) }}" --}}
+                            href="{{ route('admin.raffles.show', $raffle) }}"
                                class="flex-1 md:flex-none text-center px-4 py-2 md:py-1.5 text-[10px] font-bold uppercase tracking-wider border border-border-subtle rounded hover:bg-bg-elevated transition-all text-content-primary">
                                 Details
                             </a>

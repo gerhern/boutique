@@ -141,4 +141,20 @@ class RaffleTest extends TestCase
             ->post(route('admin.raffles.store'), $badPayload)
             ->assertRedirectBackWithErrors(['ticket_price', 'product_id', 'max_participants']);
     }
+
+    public function test_show_raffle_can_be_rendered(): void {
+        $admin = $this->createUser(Role::Admin);
+        $raffle = $this->createRaffle();
+
+        $response = $this->actingAs($admin)
+            ->get(route('admin.raffles.show', $raffle));
+
+
+        $response->assertOk();
+        $response->assertViewIs('admin.raffles.show');
+        $response->assertSee($raffle->ticket_price);
+        $response->assertSee($raffle->max_participants);
+        $response->assertSee($raffle->status);
+        $response->assertSee(route('admin.raffles.edit', $raffle));
+    }
 }

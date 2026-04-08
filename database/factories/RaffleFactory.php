@@ -19,6 +19,7 @@ class RaffleFactory extends Factory
     {
         return [
             'ticket_price'         => $this->faker->randomFloat(2,1,1000),
+            'closes_at'            => now()->addWeeks(2)
         ];
     }
 }

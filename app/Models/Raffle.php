@@ -18,6 +18,11 @@ class Raffle extends Model
     /** @use HasFactory<\Database\Factories\RaffleFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'closes_at' => 'datetime',
+        'ticket_price' => 'decimal:2',
+    ];
+
     public function scopeCountEntries($query){
         return $query->withSum('entries as tickets_sold', 'ticket_count');
     }

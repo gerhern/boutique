@@ -38,6 +38,16 @@ class RaffleController extends Controller
         return redirect()->route('admin.raffles.show', $raffle)->with('success', 'Raffle opened successfully');
     }
 
+    public function show(Request $request, Raffle $raffle){
+        $raffle->load([
+            'product.primaryImage',
+            'entries.user'
+        ]);
+
+        $raffle->loadSum('entries as total_tickets_sold', 'ticket_count');
+        return view('admin.raffles.show', compact('raffle'));
+    }
+
 
     public function entry(Request $request, Raffle $raffle) {
         $user = $request->user();

@@ -29,6 +29,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/raffles/store', [RaffleController::class, 'store'])
             ->name('admin.raffles.store');
 
+        Route::get('/admin/raffles/show/{raffle}', [RaffleController::class, 'show'])
+            ->name('admin.raffles.show');
+
+        Route::put('/admin/raffles/edit/{raffle}', [RaffleController::class, 'edit'])
+            ->name('admin.raffles.edit');
+
 
         //Admin.Products
         Route::get('/admin/products', [ProductController::class, 'adminIndex'])
@@ -47,7 +53,7 @@ Route::middleware('auth')->group(function () {
                 ->name('admin.products.edit');
 
         Route::put('/admin/products/update/{product}', [ProductController::class, 'update'])
-                ->name('admin.products.update');
+        ->name('admin.products.update');
 
         //Admin.Categories
         Route::get('/admin/categories', [CategoryController::class, 'index'])
@@ -77,8 +83,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/raffles/history', [AdminController::class, 'history'])
         ->name('admin.raffles.history');
-    Route::get('/admin/raffles/show/{raffle}', [RaffleController::class, 'show'])
-            ->name('admin.raffles.show');
 
     //Raffles
     Route::get('/raffle', [RaffleController::class, 'index'])
@@ -89,9 +93,6 @@ Route::middleware('auth')->group(function () {
         ->name('raffles.entry');
     Route::get('/raffle/{raffle}/users', [RaffleController::class, 'users'])
         ->name('raffles.users');
-
-    Route::post('/admin/raffles/store', [RaffleController::class, 'store'])
-        ->name('admin.raffles.store');
 
     //Products
     Route::get('/products', [ProductController::class, 'index'])
