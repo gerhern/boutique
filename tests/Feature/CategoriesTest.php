@@ -27,6 +27,28 @@ class CategoriesTest extends TestCase
             ->assertSee($categories[9]->name);
     }
 
+    public function test_new_categories_can_be_saved(): void {
+
+        $admin = $this->createUser(Role::Admin);
+        $goodPayload = [
+            'name' => 'New Category'
+        ];
+        $badPayload = [
+            'name' => ''
+        ];
+
+        $this->actingAs($admin)
+            ->post(route('admin.categories.store'), $goodPayload)
+            ->assertRedirect(route('admin.categories.index'))
+            ->assertSessionHas('success', 'Category created successfully.');
+
+        $this->actingAs($admin)
+            ->from(route('admin.categories.index'))
+            ->post(route('admin.categories.store'), $badPayload)
+            ->assertRedirectBackWithErrors(['name']);
+
+    }
+
 
     public function test_categories_can_be_updated(): void {
         $admin = $this->createUser(Role::Admin);

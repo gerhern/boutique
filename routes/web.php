@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/categories', [CategoryController::class, 'index'])
             ->name('admin.categories.index');
 
+        Route::post('/admin/categories', [CategoryController::class, 'store'])
+            ->name('admin.categories.store');
+
         Route::put('/admin/categories/{category}', [CategoryController::class, 'update'])
             ->name('admin.categories.update');
 
