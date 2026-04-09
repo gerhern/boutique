@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->restrictOnDelete();
             $table->decimal('ticket_price', 10, 2);
             $table->unsignedSmallInteger('max_participants')->default(10);
-            $table->enum('status', [RaffleStatus::Active, RaffleStatus::Closed, RaffleStatus::Finished])->default(RaffleStatus::Active);
+            $table->enum('status', RaffleStatus::allStatus())->default(RaffleStatus::Active);
             $table->timestamp('closes_at')->nullable();
             $table->foreignId('winner_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

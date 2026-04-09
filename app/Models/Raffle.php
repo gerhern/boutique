@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\enums\RaffleStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,7 @@ class Raffle extends Model
     use HasFactory;
 
     protected $casts = [
+        'status' => RaffleStatus::class,
         'closes_at' => 'datetime',
         'ticket_price' => 'decimal:2',
     ];

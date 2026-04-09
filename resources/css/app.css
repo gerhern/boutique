@@ -45,15 +45,17 @@
 }
 
 @layer components {
-  .badge-available {
+  .badge-available,
+  .badge-green {
     background-color: var(--color-success-bg);
     color: var(--color-success);
   }
-  .badge-sold {
+  .badge-sold,
+  .badge-red {
     background-color: var(--color-danger-bg);
     color: var(--color-danger);
   }
-  .badge-low-stock {
+  .badge-low-stock{
     background-color: var(--color-warning-bg);
     color: var(--color-warning);
   }
@@ -62,7 +64,8 @@
     color: var(--color-accent);
     border: 1px solid var(--color-accent-border);
   }
-  .badge-reserved {
+  .badge-reserved ,
+  .badge-gray {
     background-color: var(--color-bg-elevated);
     color: var(--color-text-secondary);
     border: 1px solid var(--color-border-subtle);

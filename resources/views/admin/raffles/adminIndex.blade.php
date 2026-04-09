@@ -10,6 +10,25 @@
         </div>
     </div>
 
+    {{-- Alert Component --}}
+    @if(session('success'))
+        <div class="mb-6">
+            <x-ui.alert type="success" :message="session('success')" />
+        </div>
+    @endif
+
+    @if ($errors->any())
+    <div class="mb-6">
+        <x-ui.alert type="danger" title="Action Failed">
+            <ul class="mt-1.5 ml-4 list-disc list-outside text-[11px] opacity-85 space-y-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </x-ui.alert>
+    </div>
+    @endif
+
     {{-- Contenedor de Tabla/Cards --}}
     <div class="bg-bg-surface border border-border-subtle rounded-lg overflow-hidden">
         <table class="w-full text-left border-collapse">
@@ -19,6 +38,7 @@
                     <th class="px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-content-disabled">Product</th>
                     <th class="px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-content-disabled">Ticket Price</th>
                     <th class="px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-content-disabled">Progress</th>
+                    <th class="px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-content-disabled">Status</th>
                     <th class="px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-content-disabled text-right">Actions</th>
                 </tr>
             </thead>
@@ -38,7 +58,7 @@
                                 </div>
                                 <div class="flex flex-col min-w-0">
                                     <a
-                                    {{-- href="{{ route('admin.products.edit', $raffle->product) }}" --}}
+                                    href="{{ route('admin.products.show', $raffle->product) }}"
                                      class="text-sm font-medium text-accent hover:underline truncate">
                                         {{ $raffle->product->name }}
                                     </a>
@@ -74,6 +94,15 @@
                             </div>
                         </td>
 
+                       <td class="px-0 md:px-6 py-2 md:py-4 flex justify-between items-center md:table-cell">
+                            <span class="md:hidden text-[10px] uppercase font-bold text-content-disabled">Status</span>
+                            <x-ui.color-badge :color="$raffle->status->color()">
+                                {{ $raffle->status->value }}
+                            </x-ui.color-badge>
+                        </td>
+
+
+
                         {{-- Acciones --}}
                         <td class="px-0 md:px-6 py-4 md:py-4 text-right flex justify-start md:justify-end gap-2 border-t md:border-t-0 mt-2 md:mt-0 pt-4 md:pt-4">
                             <a
@@ -83,7 +112,7 @@
                             </a>
 
                             <form
-                            {{-- action="{{ route('admin.raffles.destroy', $raffle) }}" --}}
+                            action="{{ route('admin.raffles.destroy', $raffle) }}"
                              method="POST" class="inline">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="p-2 md:p-1.5 text-content-secondary hover:text-state-danger transition-colors">

@@ -22,7 +22,6 @@
     </div>
 
     <div class="mb-6 flex flex-col gap-3">
-        @dump(session('errors'))
 
         {{-- Notificación de Éxito al crear o actualizar --}}
         @if (session('status') || session('success'))

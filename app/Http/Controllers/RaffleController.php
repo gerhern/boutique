@@ -48,6 +48,29 @@ class RaffleController extends Controller
         return view('admin.raffles.show', compact('raffle'));
     }
 
+    public function edit(Request $request, Raffle $raffle){
+        $raffle->loadCount('entries');
+        $raffle->load('product.primaryImage');
+
+        return view('admin.raffles.edit', compact('raffle'));
+    }
+
+    public function destroy(Request $request, Raffle $raffle){
+
+        $isInactiveStatus = $raffle->status->isInInactiveStatus();
+
+        if(!$isInactiveStatus){
+            $raffle->update([
+                'status' => RaffleStatus::Canceled
+            ]);
+
+            return redirect(route('admin.raffles.index'))
+                ->with('success', 'Raffle canceled successfully');
+        }
+
+        return redirect()->back()->withErrors(['status' => "Raffle with status {$raffle->status->value} cannot be canceled"]);
+    }
+
 
     public function entry(Request $request, Raffle $raffle) {
         $user = $request->user();

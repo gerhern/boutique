@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\enums\RaffleStatus;
 use App\enums\Role;
 use App\Models\Product;
 use App\Models\Raffle;
@@ -133,7 +134,7 @@ class RaffleTest extends TestCase
             ->post(route('admin.raffles.store'), $goodPayload);
         $raffle = Raffle::latest()->first();
 
-            $response->assertRedirect(route('admin.raffles.show', $raffle))
+        $response->assertRedirect(route('admin.raffles.show', $raffle))
             ->assertSessionHas('success', 'Raffle opened successfully');
 
         $this->actingAs($admin)
@@ -142,7 +143,8 @@ class RaffleTest extends TestCase
             ->assertRedirectBackWithErrors(['ticket_price', 'product_id', 'max_participants']);
     }
 
-    public function test_show_raffle_can_be_rendered(): void {
+    public function test_show_raffle_can_be_rendered(): void
+    {
         $admin = $this->createUser(Role::Admin);
         $raffle = $this->createRaffle();
 
@@ -156,5 +158,50 @@ class RaffleTest extends TestCase
         $response->assertSee($raffle->max_participants);
         $response->assertSee($raffle->status);
         $response->assertSee(route('admin.raffles.edit', $raffle));
+    }
+
+    public function test_edit_raffle_can_be_redered(): void
+    {
+        $this->withExceptionHandling();
+        $admin = $this->createUser(Role::Admin);
+        $raffle = $this->createRaffle();
+
+        $this->actingAs($admin)
+            ->get(route('admin.raffles.edit', $raffle))
+            ->assertViewIs('admin.raffles.edit')
+            ->assertSee('name="max_participants"', false)
+            ->assertSee('name="closes_at"', false)
+            ->assertSee('name="ticket_price"', false)
+            ->assertSee($raffle->product->name, false);
+    }
+
+    public function test_raffle_can_be_canceled(): void
+    {
+        $admin = $this->createUser(Role::Admin);
+        $raffle = $this->createRaffle();
+
+        $this->actingAs($admin)
+            ->delete(route('admin.raffles.destroy', $raffle))
+            ->assertRedirect(route('admin.raffles.index'))
+            ->assertSessionHas('success', 'Raffle canceled successfully');
+
+        $this->assertDatabaseHas('raffles', ['status' => RaffleStatus::Canceled]);
+    }
+
+    public function test_raffle_in_inactive_status_cannot_be_canceled(): void
+    {
+        $admin = $this->createUser(Role::Admin);
+        $raffleFinished = $this->createRaffle(null, ['status' => RaffleStatus::Finished]);
+        $raffleClosed = $this->createRaffle(null, ['status' => RaffleStatus::Closed]);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.raffles.destroy', $raffleFinished))
+            ->assertSessionHasErrors(['status' => "Raffle with status {$raffleFinished->status->value} cannot be canceled"]);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.raffles.destroy', $raffleClosed))
+            ->assertSessionHasErrors(['status' => "Raffle with status {$raffleClosed->status->value} cannot be canceled"]);
+
+        $this->assertDatabaseMissing('raffles', ['status' => RaffleStatus::Canceled]);
     }
 }
