@@ -22,7 +22,8 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
-    public function adminIndex(Request $request){
+    public function adminIndex(Request $request)
+    {
         $products = Product::latest()->paginate(12);
 
         return view('admin.products.index', compact('products'));
@@ -31,7 +32,6 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         $categories = Category::all();
-
         return view('admin.products.create', compact('categories'));
     }
 
@@ -50,24 +50,16 @@ class ProductController extends Controller
                 ]);
 
                 if ($request->hasFile('images')) {
-                    foreach ($request->file('images') as $index => $file) {
-                        $path = $file->store('products', 'public');
-                        $product->images()->create([
-                            'path'       => $path,
-                            'is_primary' => $index === 0,
-                            'sort_order' => $index
-                        ]);
-                        $uploadedFiles[] = $path;
-                    }
+                    $uploadedFiles = $this->uploadProductImages($product, $request->file('images'));
                 }
-                return redirect(route('admin.products.show', $product));
+
+                return redirect(route('admin.products.show', $product))
+                    ->with('success', 'Product created successfully');
             });
         } catch (\Exception $e) {
-            foreach ($uploadedFiles as $file) {
-                Storage::disk('public')->delete($file);
-            }
-
             Log::error('Error saving product: ' . $e->getMessage());
+            $this->deleteImagesOnDisk($uploadedFiles);
+
             return back()->withInput()
                 ->withErrors(['error' => 'Product can not be stored, try again later.']);
         }
@@ -87,6 +79,7 @@ class ProductController extends Controller
 
     public function update(ProductUpdateRequest $request, Product $product)
     {
+
         $uploadedFiles = [];
         $filesToDelete = [];
 
@@ -101,30 +94,11 @@ class ProductController extends Controller
                 ]);
 
                 if ($request->filled('delete_images')) {
-                    $images = $product->images()->whereIn('id', $request->delete_images)->get();
-
-                    foreach ($images as $image) {
-                        $filesToDelete[] = $image->path;
-                        $image->delete();
-                    }
+                    $filesToDelete = $this->deleteImagesOnBase($product, $request->delete_images);
                 }
 
                 if ($request->hasFile('images')) {
-                    $currentCount = $product->images()->count();
-                    $availableSlots = 3 - $currentCount;
-
-                    foreach ($request->file('images') as $index => $file) {
-                        if ($index < $availableSlots) {
-                            $path = $file->store('products', 'public');
-                            $uploadedFiles[] = $path;
-
-                            $product->images()->create([
-                                'path' => $path,
-                                'is_primary' => ($currentCount === 0 && $index === 0),
-                                'sort_order' => $currentCount + $index
-                            ]);
-                        }
-                    }
+                    $uploadedFiles = $this->handleNewImages($product, $request->file('images'));
                 }
 
                 if (!$product->images()->where('is_primary', true)->exists()) {
@@ -132,18 +106,71 @@ class ProductController extends Controller
                 }
             });
 
-            foreach ($filesToDelete as $path) {
-                Storage::disk('public')->delete($path);
-            }
+            $this->deleteImagesOnDisk($filesToDelete);
 
-            return redirect()->route('admin.products.show', $product)
+            return redirect()
+                ->route('admin.products.show', $product)
                 ->with('status', 'Product updated successfully.');
 
         } catch (\Exception $e) {
-            foreach ($uploadedFiles as $file) {
-                Storage::disk('public')->delete($file);
-            }
-            return back()->withErrors(['error' => $e->getMessage()]);
+            Log::error('Error updating product: ' . $e->getMessage());
+            $this->deleteImagesOnDisk($uploadedFiles);
+
+            return back()
+                ->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    private function uploadProductImages(Product $product, array $files): array
+    {
+        $paths = [];
+        foreach ($files as $index => $file) {
+            $path = $file->store('products', 'public');
+            $paths[] = $path;
+
+            $product->images()->create([
+                'path'       => $path,
+                'is_primary' => $index === 0,
+                'sort_order' => $index
+            ]);
+        }
+        return $paths;
+    }
+
+    private function deleteImagesOnDisk(array $files): void
+    {
+        foreach ($files as $file) {
+            Storage::disk('public')->delete($file);
+        }
+    }
+    private function deleteImagesOnBase(Product $product, array $imagesToDelete): array
+    {
+        $images = $product->images()->whereIn('id', $imagesToDelete)->get();
+
+        foreach ($images as $image) {
+            $image->delete();
+        }
+        return $images->pluck('path')->toArray();
+    }
+
+    private function handleNewImages(Product $product, array $images): array
+    {
+        $uploadedFiles = [];
+        $currentCount = $product->images()->count();
+        $availableSlots = config('boutique.max_images_per_product') - $currentCount;
+        foreach ($images as $index => $file) {
+            if ($index < $availableSlots) {
+                $path = $file->store('products', 'public');
+                $uploadedFiles[] = $path;
+
+                $product->images()->create([
+                    'path' => $path,
+                    'is_primary' => ($currentCount === 0 && $index === 0),
+                    'sort_order' => $currentCount + $index
+                ]);
+            }
+        }
+
+        return $uploadedFiles;
     }
 }

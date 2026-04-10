@@ -25,7 +25,7 @@ class DashboardController extends Controller
 
         $recentProducts = Product::with('category')
             ->latest()
-            ->take(8)
+            ->take(10)
             ->get();
 
         return view('dashboard', compact('stats', 'recentProducts'));

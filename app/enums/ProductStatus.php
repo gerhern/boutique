@@ -16,6 +16,13 @@ enum ProductStatus: string
         ];
     }
 
+    public static function statusRestricted(): array{
+        return [
+            self::Reserved,
+            self::Sold
+        ];
+    }
+
     public static function options(): array
 {
     return collect(self::cases())->mapWithKeys(function ($status) {
