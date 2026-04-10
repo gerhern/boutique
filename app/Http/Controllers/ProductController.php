@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -79,6 +80,10 @@ class ProductController extends Controller
 
     public function update(ProductUpdateRequest $request, Product $product)
     {
+        if(!Gate::authorize('canBeUpdated', $product)){
+            return back()
+                ->withErrors(['status' => "{$product->status} products cannot be edited"]);
+        }
 
         $uploadedFiles = [];
         $filesToDelete = [];
