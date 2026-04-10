@@ -204,7 +204,7 @@ class ProductsTest extends TestCase
 
         Storage::fake('public');
         $admin = $this->createUser(Role::Admin);
-        $product = $this->createProduct();
+        $product = $this->createProduct(['status' => ProductStatus::Available]);
 
         $images = [];
         array_push($images, UploadedFile::fake()->image('test_image.jpg', 600, 800));

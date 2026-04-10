@@ -80,9 +80,9 @@ class ProductController extends Controller
 
     public function update(ProductUpdateRequest $request, Product $product)
     {
-        if(!Gate::authorize('canBeUpdated', $product)){
+        if (Gate::denies('canBeUpdated', $product)) {
             return back()
-                ->withErrors(['status' => "{$product->status} products cannot be edited"]);
+                ->withErrors(['status' => "{$product->status->value} products cannot be edited"]);
         }
 
         $uploadedFiles = [];
@@ -116,7 +116,6 @@ class ProductController extends Controller
             return redirect()
                 ->route('admin.products.show', $product)
                 ->with('status', 'Product updated successfully.');
-
         } catch (\Exception $e) {
             Log::error('Error updating product: ' . $e->getMessage());
             $this->deleteImagesOnDisk($uploadedFiles);

@@ -8,7 +8,7 @@ enum ProductStatus: string
     case Reserved = 'reserved';
     case Sold = 'sold';
 
-    public static function all(): array{
+    public static function allStatus(): array{
         return [
             self::Available,
             self::Reserved,
@@ -16,11 +16,12 @@ enum ProductStatus: string
         ];
     }
 
-    public static function statusRestricted(): array{
-        return [
+    public function isRestricted(): bool{
+        return match($this){
+            self::Available => false,
             self::Reserved,
-            self::Sold
-        ];
+            self::Sold => true
+        };
     }
 
     public static function options(): array
