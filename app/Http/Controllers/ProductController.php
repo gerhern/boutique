@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\enums\ProductStatus;
 use App\Http\Requests\admin\{ProductStoreRequest, ProductUpdateRequest};
 use App\Models\Category;
 use App\Models\Product;
@@ -80,7 +81,8 @@ class ProductController extends Controller
     public function edit(Request $request, Product $product)
     {
         $categories = Category::all();
-        return view('admin.products.edit', compact('product', 'categories'));
+        $productStatus = ProductStatus::options();
+        return view('admin.products.edit', compact('product', 'categories', 'productStatus'));
     }
 
     public function update(ProductUpdateRequest $request, Product $product)

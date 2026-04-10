@@ -25,11 +25,11 @@
                     'reserved'  => 'bg-amber-500/10 text-amber-500 border-amber-500/20',
                     'raffle'    => 'bg-purple-500/10 text-purple-500 border-purple-500/20',
                     'sold'      => 'bg-slate-500/10 text-slate-500 border-slate-500/20',
-                ][$product->status] ?? 'bg-accent-muted text-accent border-accent-border';
+                ][$product->status->value] ?? 'bg-accent-muted text-accent border-accent-border';
             @endphp
 
             <span class="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full border {{ $statusClasses }}">
-                {{ $product->status }}
+                {{ $product->status->value }}
             </span>
         </div>
 

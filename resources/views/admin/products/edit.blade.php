@@ -120,16 +120,12 @@
                             @enderror
                         </div>
 
+                        {{-- @dd($productStatus) --}}
                         <x-ui.select
                             name="status"
                             label="Status"
-                            :selected="old('status', $product->status)"
-                            :options="[
-                                'available' => 'Available',
-                                'reserved'  => 'Reserved',
-                                'raffle'    => 'In Raffle',
-                                'sold'      => 'Sold',
-                            ]"
+                            :selected="old('status', $product->status->value)"
+                            :options=$productStatus
                         />
                     </div>
 

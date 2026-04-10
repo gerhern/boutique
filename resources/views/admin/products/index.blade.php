@@ -90,7 +90,7 @@
                                         'reserved'  => ['class' => 'bg-amber-500/10 text-amber-600 border-amber-500/20', 'label' => 'Reserved'],
                                         'sold'      => ['class' => 'bg-slate-500/10 text-slate-500 border-slate-500/20', 'label' => 'Sold'],
                                     ];
-                                    $currentStatus = $statusMap[$product->status] ?? ['class' => 'bg-gray-100 text-gray-600 border-gray-200', 'label' => $product->status];
+                                    $currentStatus = $statusMap[$product->status->value] ?? ['class' => 'bg-gray-100 text-gray-600 border-gray-200', 'label' => $product->status->value];
                                 @endphp
                                 <span class="px-2 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-tight {{ $currentStatus['class'] }}">
                                     {{ $currentStatus['label'] }}

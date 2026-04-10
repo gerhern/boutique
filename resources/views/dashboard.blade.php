@@ -110,7 +110,7 @@
                 </span>
 
                 <div>
-                    <x-ui.badge :status="$product->status" />
+                    <x-ui.badge :status="$product->status->value" />
                 </div>
 
                 <div class="flex items-center gap-1.5">

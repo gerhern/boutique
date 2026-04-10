@@ -19,6 +19,10 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
+    protected $casts = [
+            'status' => ProductStatus::class
+        ];
+
     public function scopeAvailable($query){
         return $query->where('status', ProductStatus::Available);
     }
