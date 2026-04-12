@@ -308,4 +308,22 @@ class ProductsTest extends TestCase
             ->assertSee($products[2]->primaryImage()->first()->path, false )
             ->assertSee(route('admin.products.show', $products[3]));
     }
+
+    public function test_invalid_status_cannot_be_edited(){
+        $this->withoutExceptionHandling();
+        $admin = $this->createUser(Role::Admin);
+
+        $product = $this->createProduct(['status' => ProductStatus::Sold]);
+        $category = $this->createCategory();
+        $payload = [
+            'name' => 'Testing Name',
+            'price' => 122.01,
+            'category_id' => $category->id
+        ];
+
+        $response = $this->actingAs($admin)
+            ->put(route('admin.products.update', $product), $payload);
+        dump($response->getSession());
+            $response->assertSessionHasErrors('status');
+    }
 }

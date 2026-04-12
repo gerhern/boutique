@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/raffles/edit/{raffle}', [RaffleController::class, 'edit'])
             ->name('admin.raffles.edit');
 
-        Route::put('/', [RaffleController::class, 'update'])
+        Route::put('/admin/raffles/{raffle}', [RaffleController::class, 'update'])
             ->name('admin.raffles.update');
 
         Route::delete('admin/raffles/destroy/{raffle}', [RaffleController::class, 'destroy'])

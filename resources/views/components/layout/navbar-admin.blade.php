@@ -38,14 +38,18 @@
             </a>
 
             {{-- Avatar + nombre --}}
-            <div class="flex items-center gap-2">
-                <span class="hidden sm:block text-xs text-content-disabled">
-                    {{ Auth::user()->name ?? 'Admin' }}
-                </span>
-                <div class="w-7 h-7 rounded-full bg-accent-muted border border-accent-border flex items-center justify-center text-[10px] font-semibold text-accent uppercase">
-                    {{ substr(Auth::user()->name ?? 'A', 0, 2) }}
-                </div>
-            </div>
+            <a href="{{ route('profile.edit') }}"
+                class="flex items-center gap-2 group hover:opacity-80 transition-opacity"
+                title="Editar Perfil">
+
+                    <span class="hidden sm:block text-xs text-content-disabled group-hover:text-accent transition-colors">
+                        {{ Auth::user()->name ?? 'Admin' }}
+                    </span>
+
+                    <div class="w-7 h-7 rounded-full bg-accent-muted border border-accent-border flex items-center justify-center text-[10px] font-semibold text-accent uppercase group-hover:bg-accent group-hover:text-white transition-all">
+                        {{ substr(Auth::user()->name ?? 'A', 0, 2) }}
+                    </div>
+            </a>
 
             {{-- Logout --}}
             <form method="POST" action="{{ route('logout') }}">

@@ -1,29 +1,36 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
+@section('title', 'Configuración de Perfil')
+
+@section('content')
+    <div class="py-12 bg-bg-base">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            {{-- Encabezado Manual --}}
+            <header class="mb-10">
+                <h2 class="text-2xl font-serif font-bold text-content-primary tracking-tight">
+                    {{ __('Account Settings') }}
+                </h2>
+                <p class="text-sm text-content-disabled mt-1 italic">
+                    Gestiona tu información personal y preferencias de seguridad.
+                </p>
+            </header>
+
+            <div class="space-y-8">
+                {{-- Sección: Información del Perfil --}}
+                <div class="p-8 bg-bg-surface border border-border-subtle shadow-sm rounded-2xl">
+                    <div class="max-w-xl">
+                        @include('profile.partials.update-profile-information-form')
+                    </div>
                 </div>
-            </div>
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
+                {{-- Sección: Actualizar Contraseña --}}
+                <div class="p-8 bg-bg-surface border border-border-subtle shadow-sm rounded-2xl">
+                    <div class="max-w-xl">
+                        @include('profile.partials.update-password-form')
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
