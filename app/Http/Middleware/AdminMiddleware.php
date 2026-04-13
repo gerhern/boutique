@@ -19,6 +19,7 @@ class AdminMiddleware
 
         return $user->isAdmin()
             ? $next($request)
-            : redirect(route('products.index'))->with('error', '403, Esta sección está reservada para el equipo administrativo de ' . config('app.name'));
+            : redirect(route('products.index'))
+                ->with('error', 'This section is reserved for the administrative team of ' . config('app.name'));
     }
 }

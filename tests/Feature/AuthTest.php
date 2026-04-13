@@ -71,7 +71,8 @@ class AuthTest extends TestCase
             $response = $this->post(route($routeName));
         }
 
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('login'))
+            ->assertSessionHasErrors(['error' => 'This section is reserved for the administrative team of ' . config('app.name')]);
     }
 
     #[DataProvider('adminRoutesProvider')]
@@ -85,7 +86,7 @@ class AuthTest extends TestCase
             $response = $this->post(route($routeName));
         }
             $response->assertRedirect(route('products.index'))
-            ->assertSessionHas(['error' => '403, Esta sección está reservada para el equipo administrativo de ' . config('app.name')]);
+                ->assertSessionHasErrors(['error' => 'This section is reserved for the administrative team of ' . config('app.name')]);
     }
 
     public static function adminRoutesProvider(): array
