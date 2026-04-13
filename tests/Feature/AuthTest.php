@@ -13,6 +13,20 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase, SetTestingData;
 
+    public function test_if_user_is_admin(): void {
+        $user = $this->createUser();
+        $admin = $this->createUser(Role::Admin);
+
+        $this->assertTrue($admin->isAdmin());
+        $this->assertFalse($user->isAdmin());
+    }
+    // public function test_enum_retrieves_roles(): void {
+    //     $roles = Role::getRoles();
+    //     dd($roles);
+    //     $this->assertArrayHasKey(Role::Admin, $roles);
+    //     $this->assertArrayHasKey(Role::User, $roles);
+    // }
+
     // public function test_login_screen_can_be_rendered(): void
     // {
     //     $response = $this->get('/login');
@@ -77,7 +91,7 @@ class AuthTest extends TestCase
     public static function adminRoutesProvider(): array
     {
         return [
-            'dashboard' => ['dashboard', 'get'], // Asegúrate que este nombre de ruta exista
+            'dashboard' => ['dashboard', 'get'],
             'products_index' => ['admin.products.index', 'get'],
             'products_create' => ['admin.products.create', 'get'],
             'raffles_index'   => ['admin.raffles.index', 'get'],
