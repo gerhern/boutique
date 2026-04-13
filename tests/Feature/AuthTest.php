@@ -63,6 +63,7 @@ class AuthTest extends TestCase
     #[DataProvider('adminRoutesProvider')]
     public function test_guest_cannot_enter_admin_routes($routeName, $verb): void
     {
+        $this->withExceptionHandling();
         $this->actingAsGuest();
 
         if($verb === 'get'){
@@ -71,8 +72,7 @@ class AuthTest extends TestCase
             $response = $this->post(route($routeName));
         }
 
-        $response->assertRedirect(route('login'))
-            ->assertSessionHasErrors(['error' => 'This section is reserved for the administrative team of ' . config('app.name')]);
+        $response->assertRedirect(route('login'));
     }
 
     #[DataProvider('adminRoutesProvider')]
@@ -86,7 +86,9 @@ class AuthTest extends TestCase
             $response = $this->post(route($routeName));
         }
             $response->assertRedirect(route('products.index'))
-                ->assertSessionHasErrors(['error' => 'This section is reserved for the administrative team of ' . config('app.name')]);
+                ->assertSessionHasErrors([
+                    'error' => 'This section is reserved for the administrative team of ' . config('app.name')
+                ]);
     }
 
     public static function adminRoutesProvider(): array

@@ -20,6 +20,6 @@ class AdminMiddleware
         return $user->isAdmin()
             ? $next($request)
             : redirect(route('products.index'))
-                ->with('error', 'This section is reserved for the administrative team of ' . config('app.name'));
+                ->withErrors(['error' => 'This section is reserved for the administrative team of ' . config('app.name')]);
     }
 }
