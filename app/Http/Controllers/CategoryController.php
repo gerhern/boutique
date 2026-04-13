@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\admin\{CategoryUpdateRequest, CategoryStoreRequest};
+use App\Http\Requests\admin\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -14,22 +14,24 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
-    public function store(CategoryStoreRequest $request){
+    public function store(CategoryRequest $request){
         Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name)
         ]);
 
-        return redirect(route('admin.categories.index'))->with('success', 'Category created successfully.');
+        return redirect(route('admin.categories.index'))
+            ->with('success', 'Category created successfully');
     }
 
-    public function update(CategoryUpdateRequest $request, Category $category){
+    public function update(CategoryRequest $request, Category $category){
         $category->update([
             'name' => $request->name ?? $category->name,
             'slug' => Str::slug($request->name ?? $category->slug)
         ]);
 
-        return redirect(route('admin.categories.index'))->with('success', 'Category updated successfully.');
+        return redirect(route('admin.categories.index'))
+            ->with('success', 'Category updated successfully');
     }
 
     public function destroy(Request $request, Category $category){

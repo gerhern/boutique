@@ -5,7 +5,7 @@ namespace App\Http\Requests\admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryStoreRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,12 +15,7 @@ class CategoryStoreRequest extends FormRequest
         return $this->user()->isAdmin();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+   public function rules(): array
     {
         return [
             'name' => 'required|string|max:255|unique:categories,name'

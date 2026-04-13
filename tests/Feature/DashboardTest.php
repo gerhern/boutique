@@ -20,7 +20,7 @@ class DashboardTest extends TestCase
 
     public function test_dashboard_can_be_rendered(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $products = $this->createProducts(10);
 
         $this->actingAs($admin)

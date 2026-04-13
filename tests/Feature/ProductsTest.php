@@ -36,7 +36,7 @@ class ProductsTest extends TestCase
 
     public function test_admin_create_new_product_view_can_be_rendered(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         Category::factory(5)->create();
 
         $this->actingAs($admin)
@@ -56,7 +56,7 @@ class ProductsTest extends TestCase
     public function test_new_product_is_stored(): void
     {
         Storage::fake('public');
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $category = $this->createCategory();
         $images = [];
         array_push($images, UploadedFile::fake()->image('test_image.jpg', 600, 800));
@@ -89,7 +89,7 @@ class ProductsTest extends TestCase
 
     public function test_all_store_input_validations_works(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $category = $this->createCategory();
 
         $payloadRequired = [
@@ -145,7 +145,7 @@ class ProductsTest extends TestCase
 
     public function test_admin_can_see_product_show_view(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $category = Category::factory()->create(['name' => 'Vestidos de Gala']);
         $product = Product::factory()->create([
             'name' => 'Vestido Seda Blue',
@@ -178,7 +178,7 @@ class ProductsTest extends TestCase
     {
 
         $this->withoutExceptionHandling();
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $product = $this->createProduct();
 
         $response = $this->actingAs($admin)
@@ -203,7 +203,7 @@ class ProductsTest extends TestCase
         $this->withoutExceptionHandling();
 
         Storage::fake('public');
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $product = $this->createProduct(['status' => ProductStatus::Available]);
 
         $images = [];
@@ -238,7 +238,7 @@ class ProductsTest extends TestCase
 
     public function test_updated_request_validate_data():void {
         $this->withExceptionHandling();
-         $admin = $this->createUser(Role::Admin);
+         $admin = $this->createAdmin();
          $product = $this->createProduct();
         $category = $this->createCategory();
 
@@ -295,7 +295,7 @@ class ProductsTest extends TestCase
 
     public function test_admin_index_products_can_be_rendered(): void {
         $this->withoutExceptionHandling();
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $products = $this->createProducts(10);
 
         $response = $this->actingAs($admin)
@@ -311,7 +311,7 @@ class ProductsTest extends TestCase
 
     public function test_invalid_status_cannot_be_edited(){
         $this->withoutExceptionHandling();
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
 
         $product = $this->createProduct(['status' => ProductStatus::Sold]);
         $category = $this->createCategory();

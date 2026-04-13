@@ -13,10 +13,17 @@ use Illuminate\Support\Facades\Storage;
 
 trait SetTestingData
 {
-    public function createUser(Role $role = Role::User): User
+    public function createUser(): User
     {
         return User::factory()->create([
-            'role' => $role->value
+            'role' => Role::User
+        ]);
+    }
+
+    public function createAdmin(): User
+    {
+        return User::factory()->create([
+            'role' => Role::Admin
         ]);
     }
 
@@ -38,14 +45,21 @@ trait SetTestingData
         return Raffle::factory()->create($data);
     }
 
-    public function createCategory(): Category
+    //categories
+    public function createCategory(array $data = []): Category
     {
-        return Category::factory()->create();
+        return Category::factory()->create($data);
     }
 
     public function createCategories(int $qty = 2): Collection
     {
         return Category::factory($qty)->create();
+    }
+
+    public function createProductWithCategory(array $productData = [],array $categoryData = []){
+        $category = Category::factory()->create($categoryData);
+        $product = Product::factory()->create(array_merge(['category_id' => $category->id], $productData));
+        return [$category, $product];
     }
 
     public function createImage(string $imgName = 'testing_photo.jpg')

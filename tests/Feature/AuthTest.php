@@ -15,7 +15,7 @@ class AuthTest extends TestCase
 
     public function test_if_user_is_admin(): void {
         $user = $this->createUser();
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
 
         $this->assertTrue($admin->isAdmin());
         $this->assertFalse($user->isAdmin());

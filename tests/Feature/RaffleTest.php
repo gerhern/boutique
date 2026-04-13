@@ -27,7 +27,7 @@ class RaffleTest extends TestCase
     public function test_admin_cannot_enter_to_raffle(): void
     {
 
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $raffle = $this->createRaffle();
 
         $this->actingAs($admin)
@@ -91,7 +91,7 @@ class RaffleTest extends TestCase
     public function test_raffles_index_can_be_rendered(): void
     {
         $this->withExceptionHandling();
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $raffle = $this->createRaffle();
 
         $this->actingAs($admin)
@@ -103,7 +103,7 @@ class RaffleTest extends TestCase
 
     public function test_create_raffle_view_can_be_rendered(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $product = $this->createProduct();
 
         $this->actingAs($admin)
@@ -117,7 +117,7 @@ class RaffleTest extends TestCase
 
     public function test_new_raffle_can_be_stored(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $product = $this->createProduct();
 
         $goodPayload = [
@@ -145,7 +145,7 @@ class RaffleTest extends TestCase
 
     public function test_show_raffle_can_be_rendered(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $raffle = $this->createRaffle();
 
         $response = $this->actingAs($admin)
@@ -163,7 +163,7 @@ class RaffleTest extends TestCase
     public function test_edit_raffle_can_be_redered(): void
     {
         $this->withExceptionHandling();
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $raffle = $this->createRaffle();
 
         $this->actingAs($admin)
@@ -177,7 +177,7 @@ class RaffleTest extends TestCase
 
     public function test_raffle_can_be_canceled(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $raffle = $this->createRaffle();
 
         $this->actingAs($admin)
@@ -190,7 +190,7 @@ class RaffleTest extends TestCase
 
     public function test_raffle_in_inactive_status_cannot_be_canceled(): void
     {
-        $admin = $this->createUser(Role::Admin);
+        $admin = $this->createAdmin();
         $raffleFinished = $this->createRaffle(null, ['status' => RaffleStatus::Finished]);
         $raffleClosed = $this->createRaffle(null, ['status' => RaffleStatus::Closed]);
 
