@@ -8,7 +8,7 @@ enum ProductStatus: string
     case Reserved = 'reserved';
     case Sold = 'sold';
 
-    public static function allStatus(): array{
+    public static function getStatus(): array{
         return [
             self::Available,
             self::Reserved,

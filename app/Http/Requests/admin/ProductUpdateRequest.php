@@ -6,6 +6,8 @@ use App\enums\ProductCondition;
 use App\enums\ProductStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class ProductUpdateRequest extends FormRequest
@@ -15,7 +17,8 @@ class ProductUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->isAdmin();
+        $product = $this->route('product');
+        return Gate::allows('canBeUpdated', $product) && $this->user()->isAdmin();
     }
 
     /**
@@ -90,9 +93,16 @@ class ProductUpdateRequest extends FormRequest
             'images.*.mimes' => 'Each image must be a file of type: jpg, jpeg, png.',
             'images.*.max' => 'Each image must not exceed 2MB in size.',
 
-            // Custom messages for delete_images
             'delete_images.array' => "The delete_images field must be an array.",
             "delete_images.*.exists" => "One or more of the images you are trying to delete do not exist.",
         ];
+    }
+
+    protected function failedAuthorization()
+    {
+        $product = $this->route('product');
+        throw new HttpResponseException(
+            back()->withErrors(['status' => "{$product->status->value} products cannot be edited"])
+        );
     }
 }

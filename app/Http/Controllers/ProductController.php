@@ -6,6 +6,7 @@ use App\enums\ProductStatus;
 use App\Http\Requests\admin\{ProductStoreRequest, ProductUpdateRequest};
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -37,35 +38,19 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories'));
     }
 
-    public function store(ProductStoreRequest $request)
+    public function store(ProductStoreRequest $request, ProductService $productService)
     {
-        try {
-            $uploadedFiles = [];
+        [$wasSaved, $product] = $productService
+            ->createProduct($request->validated(), $request->hasFile('images'));
 
-            return DB::transaction(function () use ($request, &$uploadedFiles) {
-                $product = Product::create([
-                    'uuid'          => Str::uuid(),
-                    'name'          => $request->name,
-                    'description'   => $request->description ?? '',
-                    'status'        => $request->status,
-                    'price'         => $request->price,
-                    'category_id'   => $request->category_id
-                ]);
-
-                if ($request->hasFile('images')) {
-                    $uploadedFiles = $this->uploadProductImages($product, $request->file('images'));
-                }
-
-                return redirect(route('admin.products.show', $product))
-                    ->with('success', 'Product created successfully');
-            });
-        } catch (\Exception $e) {
-            Log::error('Error saving product: ' . $e->getMessage());
-            $this->deleteImagesOnDisk($uploadedFiles);
-
+        if($wasSaved){
+            return redirect(route('admin.products.show', $product))
+                ->with('success', 'Product created successfully');
+        }else{
             return back()->withInput()
                 ->withErrors(['error' => 'Product can not be stored, try again later.']);
         }
+
     }
 
     public function adminShow(Request $request, Product $product)
@@ -80,75 +65,27 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product', 'categories', 'productStatus'));
     }
 
-    public function update(ProductUpdateRequest $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product, ProductService $productService)
     {
-        if (Gate::denies('canBeUpdated', $product)) {
-            return back()
-                ->withErrors(['status' => "{$product->status->value} products cannot be edited"]);
-        }
+        [$wasUpdated, $message] = $productService
+            ->updateProduct(
+                $request->validated(),
+                $product,
+                $request->filled('delete_images'),
+                $request->hasFile('images')
+            );
 
-        $uploadedFiles = [];
-        $filesToDelete = [];
-
-        try {
-            DB::transaction(function () use ($request, $product, &$uploadedFiles, &$filesToDelete) {
-                $product->update([
-                    'name'          => $request->name ?? $product->name,
-                    'description'   => $request->description ?? $product->description,
-                    'status'        => $request->status ?? $product->status,
-                    'price'         => $request->price ?? $product->price,
-                    'category_id'   => $request->category_id ?? $product->category_id
-                ]);
-
-                if ($request->filled('delete_images')) {
-                    $filesToDelete = $this->deleteImagesOnBase($product, $request->delete_images);
-                }
-
-                if ($request->hasFile('images')) {
-                    $uploadedFiles = $this->handleNewImages($product, $request->file('images'));
-                }
-
-                if (!$product->images()->where('is_primary', true)->exists()) {
-                    $product->images()->first()?->update(['is_primary' => true]);
-                }
-            });
-
-            $this->deleteImagesOnDisk($filesToDelete);
-
-            return redirect()
-                ->route('admin.products.show', $product)
-                ->with('status', 'Product updated successfully.');
-        } catch (\Exception $e) {
-            Log::error('Error updating product: ' . $e->getMessage());
-            $this->deleteImagesOnDisk($uploadedFiles);
-
-            return back()
-                ->withErrors(['error' => $e->getMessage()]);
-        }
+            return $wasUpdated
+                ? redirect()
+                    ->route('admin.products.show', $product)
+                    ->with('success', $message)
+                : back()
+                    ->withErrors(['error' => $message]);
     }
 
-    private function uploadProductImages(Product $product, array $files): array
-    {
-        $paths = [];
-        foreach ($files as $index => $file) {
-            $path = $file->store('products', 'public');
-            $paths[] = $path;
 
-            $product->images()->create([
-                'path'       => $path,
-                'is_primary' => $index === 0,
-                'sort_order' => $index
-            ]);
-        }
-        return $paths;
-    }
 
-    private function deleteImagesOnDisk(array $files): void
-    {
-        foreach ($files as $file) {
-            Storage::disk('public')->delete($file);
-        }
-    }
+
     private function deleteImagesOnBase(Product $product, array $imagesToDelete): array
     {
         $images = $product->images()->whereIn('id', $imagesToDelete)->get();
