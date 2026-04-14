@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->enum('condition', [ProductCondition::New, ProductCondition::Used]);
+            $table->enum('condition', ProductCondition::getConditions());
             $table->enum('status', [ProductStatus::Available, ProductStatus::Reserved, ProductStatus::Sold])->default('available');
             $table->decimal('price', 10,2);
             $table->foreignId('category_id')->constrained()->restrictOnDelete();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\enums\ProductCondition;
 use App\enums\ProductStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,8 @@ class Product extends Model
     use HasFactory;
 
     protected $casts = [
-            'status' => ProductStatus::class
+            'status' => ProductStatus::class,
+            'condition' => ProductCondition::class
         ];
 
     public function scopeAvailable($query){
