@@ -8,7 +8,8 @@ enum ProductStatus: string
     case Reserved = 'reserved';
     case Sold = 'sold';
 
-    public static function getStatus(): array{
+    public static function getStatus(): array
+    {
         return [
             self::Available,
             self::Reserved,
@@ -16,8 +17,9 @@ enum ProductStatus: string
         ];
     }
 
-    public function isRestricted(): bool{
-        return match($this){
+    public function isRestricted(): bool
+    {
+        return match ($this) {
             self::Available => false,
             self::Reserved,
             self::Sold => true
@@ -25,9 +27,9 @@ enum ProductStatus: string
     }
 
     public static function options(): array
-{
-    return collect(self::cases())->mapWithKeys(function ($status) {
-        return [$status->value => $status->name];
-    })->toArray();
-}
+    {
+        return collect(self::cases())->mapWithKeys(function ($status) {
+            return [$status->value => $status->name];
+        })->toArray();
+    }
 }

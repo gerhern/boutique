@@ -28,7 +28,7 @@ class ProductStoreRequest extends FormRequest
         return [
             'name'          => 'required|string|max:255',
             'description'   => 'nullable|string|max:1000',
-            'condition'     => [Rule::enum(ProductCondition::class)],
+            'condition'     => [Rule::enum(ProductCondition::class),'required'],
             'status'        => [Rule::enum(ProductStatus::class)],
             'price'         => 'required|numeric|min:1|max:9999.99',
             'category_id'   => 'required|exists:categories,id',
@@ -45,6 +45,7 @@ class ProductStoreRequest extends FormRequest
             'name.max' => 'The product name cannot exceed 255 characters.',
             'description.string' => 'The product description must be a string.',
             'description.max' => 'The product description cannot exceed 1000 characters.',
+            'condition.required' => 'The product condition is required.',
             'condition.enum' => 'The selected condition is invalid.',
             'status.enum' => 'The selected status is invalid.',
             'price.required' => 'The price is required.',

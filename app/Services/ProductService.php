@@ -21,7 +21,7 @@ class ProductService
                     'uuid'          => Str::uuid(),
                     'name'          => $data['name'],
                     'description'   => $data['description'],
-                    'status'        => $data['status'],
+                    'condition'        => $data['condition'],
                     'price'         => $data['price'],
                     'category_id'   => $data['category_id']
                 ]);

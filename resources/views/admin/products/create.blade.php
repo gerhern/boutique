@@ -22,6 +22,25 @@
         </span>
     </div>
 
+    {{-- Alert Component --}}
+    @if(session('success'))
+        <div class="mb-6">
+            <x-ui.alert type="success" :message="session('success')" />
+        </div>
+    @endif
+
+    @if ($errors->any())
+    <div class="mb-6">
+        <x-ui.alert type="danger" title="Action Failed">
+            <ul class="mt-1.5 ml-4 list-disc list-outside text-[11px] opacity-85 space-y-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </x-ui.alert>
+    </div>
+    @endif
+
     <form
         action="{{ route('admin.products.store') }}"
         method="POST"
@@ -101,17 +120,12 @@
 
                         {{-- Estado --}}
                         <x-ui.select
-                            name="status"
-                            label="Estado"
-                            :selected="old('status')"
-                            :error="$errors->first('status')"
+                            name="condition"
+                            label="Condition"
+                            :selected="old('condition')"
+                            :error="$errors->first('condition')"
                             placeholder="Select"
-                            :options="[
-                                'available' => 'Available',
-                                'reserved'  => 'Reserved',
-                                'raffle'    => 'In Raffle',
-                                'sold'      => 'Sold',
-                            ]"
+                            :options="$conditions"
                         />
 
                     </div>

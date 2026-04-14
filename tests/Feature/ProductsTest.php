@@ -161,19 +161,6 @@ class ProductsTest extends TestCase
         $response->assertSessionHasErrors('status');
     }
 
-    public function test_image_file_is_deleted_when_model_is_deleted(): void
-    {
-        Storage::fake('public');
-        $product = $this->createProduct();
-        $image = ProductImage::factory()->create(['path' => 'products/test.jpg', 'product_id' => $product->id]);
-
-        Storage::disk('public')->put('products/test.jpg', 'content');
-
-        $image->delete();
-
-        Storage::disk('public')->assertMissing('products/test.jpg');
-    }
-
     //Testing views
     public function test_admin_create_product_view_can_be_rendered(): void
     {

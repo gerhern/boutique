@@ -63,7 +63,7 @@
                                         <a href="{{ route('admin.products.show', $product) }}" class="text-sm font-medium text-content-primary hover:text-accent transition-colors">
                                             {{ $product->name }}
                                         </a>
-                                        <p class="text-[10px] text-content-disabled mt-0.5">ID: #{{ str_pad($product->id, 5, '0', STR_PAD_LEFT) }}</p>
+                                        <p class="text-[10px] text-content-disabled mt-0.5">ID: #{{ $product->uuid }}</p>
                                     </div>
                                 </div>
                             </td>

@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\enums\ProductCondition;
 use App\enums\ProductStatus;
 use App\Http\Requests\admin\{ProductStoreRequest, ProductUpdateRequest};
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -35,7 +31,8 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        $conditions = ProductCondition::getConditionsValues();
+        return view('admin.products.create', compact('categories', 'conditions'));
     }
 
     public function store(ProductStoreRequest $request, ProductService $productService)
