@@ -323,7 +323,6 @@ class ProductsTest extends TestCase
 
         $response = $this->actingAs($admin)
             ->put(route('admin.products.update', $product), $payload);
-        dump($response->getSession());
             $response->assertSessionHasErrors('status');
     }
 }

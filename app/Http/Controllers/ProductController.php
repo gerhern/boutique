@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -43,6 +44,7 @@ class ProductController extends Controller
 
             return DB::transaction(function () use ($request, &$uploadedFiles) {
                 $product = Product::create([
+                    'uuid'          => Str::uuid(),
                     'name'          => $request->name,
                     'description'   => $request->description ?? '',
                     'status'        => $request->status,

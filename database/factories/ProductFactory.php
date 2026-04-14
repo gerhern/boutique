@@ -23,6 +23,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
+            'uuid'          => $this->faker->uuid(),
             'name'          => $this->faker->words(4, true),
             'description' => $this->faker->paragraph(1),
             'condition' => $this->faker->randomElement(ProductCondition::getConditions()),
