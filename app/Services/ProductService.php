@@ -45,10 +45,9 @@ class ProductService
     public function updateProduct(array $data, Product $product, bool $hasFilesToDelete = false, bool $hasImagesToUpdate = false)
     {
         $uploadedFiles = [];
-        $filesToDelete = [];
 
         try {
-            DB::transaction(function () use ($data, $product, &$hasImagesToUpdate, &$uploadedFiles, &$hasFilesToDelete, &$filesToDelete) {
+            DB::transaction(function () use ($data, $product, &$hasImagesToUpdate, &$uploadedFiles, &$hasFilesToDelete) {
                 $product->update([
                     'name'          => $data['name'] ?? $product->name,
                     'description'   => $data['description'] ?? $product->description,
@@ -57,7 +56,7 @@ class ProductService
                 ]);
 
                 if ($hasFilesToDelete) {
-                    $filesToDelete = $this->deleteImagesOnBase($product, $data['delete_images']);
+                    $this->deleteImagesOnBase($product, $data['delete_images']);
                 }
 
                 if ($hasImagesToUpdate) {
@@ -68,8 +67,6 @@ class ProductService
                     $product->images()->first()?->update(['is_primary' => true]);
                 }
             });
-
-            $this->deleteImagesOnDisk($filesToDelete);
 
             return [true, 'Product updated successfully'];
         } catch (\Exception $e) {
